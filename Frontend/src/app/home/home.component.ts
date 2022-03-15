@@ -41,9 +41,16 @@ export class HomeComponent implements OnInit {
   }
 
   deleteMeet(task:any){
-    this.meetService.deleteMeet(task._id).subscribe(()=>{
+    if(confirm("Are you sure you want to delete the meeting")) {
+      this.meetService.deleteMeet(task._id).subscribe(()=>{
+        this.ngOnInit()
+      })
+      
+    }else{
       this.ngOnInit()
-    })
+    }
+   
+
 
   }
 
