@@ -1,0 +1,51 @@
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <div class="videoSpace" >
+                <video #video  id="videoplot" autoplay></video>
+                <div style="margin-left: 15rem;">
+             
+                    <button (click)="muteAudio()" class="btn btn-primary">Mute audio</button>
+                    <button (click)="muteVideo()" class="btn btn-primary">Mute Video</button>
+                </div>
+
+            </div>
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                  audio devices
+                </button>
+                <ul  class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <li *ngFor="let i of audioDevice" ><a class="dropdown-item" (click)="changeAudio(i)" >{{i.label}}</a></li>
+                </ul>
+          
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                  Video devices
+                </button>
+                <ul  class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <li *ngFor="let i of videoDevice" ><a class="dropdown-item" (click)="changeVideo(i)" >{{i.label}}</a></li>
+                </ul>
+
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                  Resolutions
+                </button>
+                <ul  class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <li ><a class="dropdown-item" (click)="changeVideoResolution(480,640)" >SD</a></li>
+                    <li ><a class="dropdown-item" (click)="changeVideoResolution(720,1280)" >HD</a></li>
+                    <li ><a class="dropdown-item" (click)="changeVideoResolution(1080,1920)" >Full SD</a></li>
+                    <li ><a class="dropdown-item" (click)="changeVideoResolution(2160,3840)" >U HD</a></li>
+
+
+                </ul>
+
+                <progress style="margin-left: 2mm;" id="volume" value="{{volume}}" max="100"> </progress>
+               
+              </div>
+
+        </div>
+        <div class="col">
+          
+        </div>
+      </div>
+
+    
+</div>

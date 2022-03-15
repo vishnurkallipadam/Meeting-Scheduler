@@ -1,0 +1,20 @@
+.videoSpace{
+    align-items: center;
+    border: 1mm solid black;
+    margin-top: 8rem;
+}
+
+video{
+    height: 25rem;
+    width: 45rem;
+}
+
+#videoplot{
+    transform: rotateY(180deg);
+    -webkit-transform:rotateY(180deg); /* Safari and Chrome */
+    -moz-transform:rotateY(180deg); /* Firefox */
+}
+
+.dropdown-toggle{
+    margin-left: 1mm;
+}

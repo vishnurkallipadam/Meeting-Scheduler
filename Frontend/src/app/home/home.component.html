@@ -1,0 +1,71 @@
+<div class="container">
+
+    <div>
+        <h1 style="text-align: center;">Schedule your Meetings</h1>
+    </div>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">ADD</button>
+    <h2>PENDING Meetings</h2>
+    <div *ngFor="let task of meetArray">
+        <ul class="list-group">
+
+            <li class="list-group-item list-group-item-secondary">
+                <span><label for=""><h6>Name:</h6> </label>{{task.name}}</span><br>
+                <span><label for=""><h6>Description:</h6> </label>{{task.description}}</span><br>
+                <span><label for=""><h6>Date:</h6> </label>{{task.date}}</span><br>
+
+                <h6>http://localhost:4200/meet/<input type="text" disabled value="{{task._id}}" id="myInput"></h6><br>
+                <a  class="btn btn-primary" (click)="joinMeet(task)">JOIN</a>
+
+           
+                <button class="btn btn-warning " >UPDATE</button>
+                <button class="btn btn-danger " (click)="deleteMeet(task)" >DELETE</button>
+
+
+            </li>
+
+        </ul>
+
+    </div>
+
+    <!-- <h2>COMPLETED TASKS</h2>
+    <div *ngFor="let task of meetArray">
+        <ul class="list-group" >
+
+            <li class="list-group-item list-group-item-dark">
+                <span><label for=""><h6>Name:</h6> </label>{{task.name}}</span><br>
+                <span><label for=""><h6>Description:</h6> </label>{{task.description}}</span><br>
+                <span><label for=""><h6>Date:</h6> </label>{{task.date}}</span><br>
+                <button class="btn btn-danger " >DELETE</button>
+
+
+            </li>
+
+        </ul>
+
+    </div> -->
+</div>
+
+    <!-- The Modal -->
+    <div class="modal" id="myModal">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+      
+    
+      
+            <!-- Modal body -->
+            <div class="modal-body">
+                
+             <input type="text" name="meetname" [(ngModel)]="data.meet" class="form-control" placeholder="Name of Meeting" required><br>
+             <input type="text" name="description" [(ngModel)]="data.description" class="form-control" placeholder="Description of Meeting" required><br>
+             <input type="text" name="date" [(ngModel)]="data.date" class="form-control" placeholder="Date of Meeting" required>
+            </div>
+      
+            <!-- Modal footer -->
+            <div class="modal-footer">
+              <button type="button" class="btn btn-success" (click)="addMeet()"  data-bs-dismiss="modal">Schedule New Meeting</button>
+              <button type="button"  class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+            </div>
+      
+          </div>
+        </div>
+      </div>
