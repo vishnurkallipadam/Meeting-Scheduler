@@ -137,14 +137,11 @@ export class MeetComponent implements OnInit {
 
   joinVideo(){
     console.log(this.joined);
-    
     this.joined="on"
     console.log(this.joined);
     this.router.navigate(['/joinedmeet'])
-
-    
-
   }
+  
   ngOnDestroy() {
     this.stream.getTracks().forEach((track:any) => {  
           track.stop();

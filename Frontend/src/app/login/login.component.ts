@@ -21,8 +21,9 @@ export class LoginComponent implements OnInit {
     this.auth.loginUser(this.user).subscribe(
       data=>{
         alert("Login Success")
+        console.log(data.mail);
+        sessionStorage.setItem("loginmail",this.user.email)
         console.log(data);
-        
       },
       err=>{
         alert(err.error);

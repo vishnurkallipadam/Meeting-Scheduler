@@ -20,8 +20,9 @@ export class ChatService {
   }
   
   newMessageReceived(){
+    let room= sessionStorage.getItem('joinedId')
     let observable = new Observable<{user:String, message:String, userID:String}>(observer=>{
-        this.socket.on('message', (data:any)=>{
+        this.socket.on(`${room}`, (data:any)=>{
             observer.next(data);    
         });
         return () => {this.socket.disconnect();}
