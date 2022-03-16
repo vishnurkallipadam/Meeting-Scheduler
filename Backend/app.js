@@ -1,15 +1,18 @@
 var express = require('express');
 const app = express();
 var cors = require('cors')
-var meetData = require('./src/models/meetData')
+var path = require('path');
+var meetData=require('./src/models/meetData')
 
+let http = require('http');
+let server = http.Server(app);
 
+let socketIO = require('socket.io');
+let io = socketIO(server);
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
-
-
+app.use(express.static(path.join(__dirname, 'public')));
 
 const port = process.env.PORT || 5200;
 
@@ -38,7 +41,24 @@ app.get('/deleteMeet/:id',(req,res)=>{
   })
 })
 
-app.listen(port, () => {
+console.log("b4 connection");
+
+io.on('connection', (socket) => {
+    console.log("a user connected");
+    socket.on('join', (data) => {
+        socket.join(data.room);
+        socket.broadcast.to(data.room).emit('user joined');
+    });
+
+    socket.on('message',(data)=>{
+      console.log(data);
+      io.emit('message', data);
+    })  
+});
+
+
+
+server.listen(port, () => {
     console.log(`started on port: ${port}`);
 });
 

@@ -37,6 +37,7 @@ export class HomeComponent implements OnInit {
 
   joinMeet(data:any){
     this.router.navigate(['/meet/'+data._id])
+    sessionStorage.setItem('joinedId',data._id)
 
   }
 

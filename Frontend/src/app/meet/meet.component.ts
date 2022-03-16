@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-meet',
@@ -8,7 +9,7 @@ import { Component, OnInit } from '@angular/core';
 export class MeetComponent implements OnInit {
   video: any = {};
   localstream:any;
-  constructor() { }
+  constructor( private router:Router ) { }
   audioDevice:any=[]
   videoDevice:any=[]
   audiooutputDevice:any=[]
@@ -20,8 +21,9 @@ export class MeetComponent implements OnInit {
   height:any
   width:any
   videostatus:any=''
-  v:any="on"
-  a:any="on"
+  v:any="on";
+  joined:any="off"
+  a:any="on";
   ngOnInit(): void {
     
     if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
@@ -63,32 +65,32 @@ export class MeetComponent implements OnInit {
   this.video.srcObject = mediaStream;
   this.localstream=mediaStream
   this.video.onloadedmetadata = function() {
-    this.video.play();
+    // this.video.play();
     
   }
-  const audioContext = new AudioContext();
-  const analyser = audioContext.createAnalyser();
-  const microphone = audioContext.createMediaStreamSource(mediaStream);
-  const scriptProcessor = audioContext.createScriptProcessor(2048, 1, 1);
+  // const audioContext = new AudioContext();
+  // const analyser = audioContext.createAnalyser();
+  // const microphone = audioContext.createMediaStreamSource(mediaStream);
+  // const scriptProcessor = audioContext.createScriptProcessor(2048, 1, 1);
 
-  analyser.smoothingTimeConstant = 0.8;
-  analyser.fftSize = 1024;
+  // analyser.smoothingTimeConstant = 0.8;
+  // analyser.fftSize = 1024;
 
-  microphone.connect(analyser);
-  analyser.connect(scriptProcessor);
-  scriptProcessor.connect(audioContext.destination);
-  scriptProcessor.onaudioprocess = ()=>{
-    const array = new Uint8Array(analyser.frequencyBinCount);
-    analyser.getByteFrequencyData(array);
-    const arraySum = array.reduce((a, value) => a + value, 0);
-    const average = arraySum / array.length;
-    // this.volume=Math.round(average)
-    // console.log(this.volume);
-    this.volume = document.getElementById('volume')
-    this.volume.setAttribute("value",Math.round(average))
+  // microphone.connect(analyser);
+  // analyser.connect(scriptProcessor);
+  // scriptProcessor.connect(audioContext.destination);
+  // scriptProcessor.onaudioprocess = ()=>{
+  //   const array = new Uint8Array(analyser.frequencyBinCount);
+  //   analyser.getByteFrequencyData(array);
+  //   const arraySum = array.reduce((a, value) => a + value, 0);
+  //   const average = arraySum / array.length;
+  //   // this.volume=Math.round(average)
+  //   // console.log(this.volume);
+  //   this.volume = document.getElementById('volume')
+  //   this.volume.setAttribute("value",Math.round(average))
     
     // colorPids(average);
-  };
+  // };
 })
 .catch(function(err) { console.log(err.name + ": " + err.message); }); // always check for errors at the end.
 
@@ -109,14 +111,12 @@ export class MeetComponent implements OnInit {
 
 
   muteAudio(){
-
-    
     this.stream.getTracks().forEach((track:any) => {
       if(track.kind=='audio'){
           track.stop();
           this.a="off"
           console.log(this.a);
-          
+   
       }
       });
   }
@@ -135,4 +135,19 @@ export class MeetComponent implements OnInit {
     this.ngAfterViewInit()
   }
 
+  joinVideo(){
+    console.log(this.joined);
+    
+    this.joined="on"
+    console.log(this.joined);
+    this.router.navigate(['/joinedmeet'])
+
+    
+
+  }
+  ngOnDestroy() {
+    this.stream.getTracks().forEach((track:any) => {  
+          track.stop();
+      });
+  }
 }

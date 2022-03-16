@@ -7,7 +7,8 @@
              
                     <button (click)="muteAudio()" class="btn btn-primary">Mute audio</button>
                     <button (click)="muteVideo()" class="btn btn-primary">Mute Video</button>
-                </div>
+                    <button (click)="joinVideo()" class="btn btn-primary">JOIN</button>
+                  </div>
 
             </div>
             <div class="dropdown">
@@ -33,11 +34,9 @@
                     <li ><a class="dropdown-item" (click)="changeVideoResolution(720,1280)" >HD</a></li>
                     <li ><a class="dropdown-item" (click)="changeVideoResolution(1080,1920)" >Full SD</a></li>
                     <li ><a class="dropdown-item" (click)="changeVideoResolution(2160,3840)" >U HD</a></li>
-
-
                 </ul>
 
-                <progress style="margin-left: 2mm;" id="volume" value="{{volume}}" max="100"> </progress>
+                <!-- <progress style="margin-left: 2mm;" id="volume" value="{{volume}}" max="100"> </progress> -->
                
               </div>
 
@@ -45,7 +44,5 @@
         <div class="col">
           
         </div>
-      </div>
-
-    
+      </div>  
 </div>

@@ -10,6 +10,7 @@ import { LoginComponent } from './login/login.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { MeetComponent } from './meet/meet.component';
+import { ChatComponent } from './chat/chat.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { MeetComponent } from './meet/meet.component';
     SignupComponent,
     LoginComponent,
     MeetComponent,
+    ChatComponent,
     
   ],
   imports: [
