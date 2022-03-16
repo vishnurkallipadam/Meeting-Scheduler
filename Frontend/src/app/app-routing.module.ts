@@ -5,6 +5,7 @@ import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { MeetComponent } from './meet/meet.component';
 import { SignupComponent } from './signup/signup.component';
+import { UserguardGuard } from './userguard.guard';
 
 const routes: Routes = [
   {
@@ -14,7 +15,8 @@ const routes: Routes = [
   },
   {
     path:'home',
-    component:HomeComponent
+    component:HomeComponent,
+    canActivate:[UserguardGuard]
   },
   {
     path:'login',
@@ -26,11 +28,13 @@ const routes: Routes = [
   },
   {
     path:'meet/:id',
-    component:MeetComponent
+    component:MeetComponent,
+    canActivate:[UserguardGuard]
   },
   {
     path:'joinedmeet',
-    component:ChatComponent
+    component:ChatComponent,
+    canActivate:[UserguardGuard]
   }
 ];
 
