@@ -13,4 +13,9 @@ export class AuthService {
     return this.http.post<any>(`${this.server_address}/register`,{data})
   }
 
+  loginUser(data:any){
+    return this.http.post<any>(`${this.server_address}/login`,{data})
+
+  }
+
 }

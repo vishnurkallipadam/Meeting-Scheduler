@@ -72,6 +72,35 @@ app.post('/register',async(req,res)=>{
   })
 })
 
+app.post('/login',(req,res)=>{
+  console.log("login");
+  res.header("Acces-Control-Allow-Origin","*");
+  res.header("Acces-Control-Allow-Methods: GET, POST, PATH, PUT, DELETE, HEAD"); 
+  console.log(req.body);
+  userdata.findOne({email:req.body.data.email},(err,user)=>{
+      console.log(user);
+      if(user){
+          bcrypt.compare(req.body.data.password,user.password)
+          .then((response)=>{
+              if(response){
+                  console.log("user");
+                
+                  res.status(200).send({user:user})
+                  
+                  console.log("success");
+              }else{
+                  console.log("failed");
+                  res.status(401).send('Invalid user Password')
+              }
+          })   
+      }else{
+          console.log("failed");
+          res.status(401).send('Invalid credential')
+      }
+  })
+})
+
+
 console.log("b4 connection");
 
 io.on('connection', (socket) => {
