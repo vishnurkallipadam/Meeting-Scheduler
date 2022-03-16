@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup,FormControl,Validators} from '@angular/forms'
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-signup',
@@ -9,7 +10,7 @@ import { FormGroup,FormControl,Validators} from '@angular/forms'
 })
 export class SignupComponent implements OnInit {
 
-  constructor() { }
+  constructor(private authService:AuthService) { }
   loginForm = new FormGroup({
     name: new FormControl(''),
     email: new FormControl('',[Validators.required,Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}$')]),
@@ -28,7 +29,18 @@ export class SignupComponent implements OnInit {
 
   employeeRegister(){
     console.log(this.loginForm.value);
-    
+    this.authService.registerUser(this.loginForm.value).subscribe(
+      data=>{
+        console.log("signup success");
+        alert("register success")
+        
+      },
+      err=>{
+        console.log(err.error);
+        
+      }
+
+    )
   }
 
 }
