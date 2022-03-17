@@ -34,6 +34,6 @@
   
     <form (submit)="sendMessage()" class="msger-inputarea">
       <input [(ngModel)]="message" name="mmessage" type="text" class="msger-input" placeholder="Enter your message...">
-      <button type="submit"  class="msger-send-btn">Send</button>
+      <button type="submit" [disabled]=""  class="msger-send-btn">Send</button>
     </form>
   </section>

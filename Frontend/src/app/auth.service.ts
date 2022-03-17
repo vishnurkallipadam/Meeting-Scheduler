@@ -19,6 +19,11 @@ export class AuthService {
   }
 
 
+  getUserToken()
+  {
+    return sessionStorage.getItem('token')
+  }
+
   userLoggedIn()
   {
     return !!sessionStorage.getItem('loginmail')

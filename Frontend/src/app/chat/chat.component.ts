@@ -33,11 +33,13 @@ export class ChatComponent implements OnInit {
 
   sendMessage(){
 
-    console.log(this.message);
-    let loginmail=sessionStorage.getItem("loginmail");
-    let room = sessionStorage.getItem("joinedId")
-    this.chat.sendMessage({user:loginmail,  message:this.message ,room:room})
-    this.message=''
+      console.log(this.message);
+      if(this.message!=''){
+        let loginmail=sessionStorage.getItem("loginmail");
+        let room = sessionStorage.getItem("joinedId")
+        this.chat.sendMessage({user:loginmail,  message:this.message ,room:room})
+        this.message=''
+        }
   }
 
 }

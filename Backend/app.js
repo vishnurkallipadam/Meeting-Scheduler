@@ -2,6 +2,7 @@ var express = require('express');
 const app = express();
 var cors = require('cors')
 var path = require('path');
+const jwt = require('jsonwebtoken')
 var meetData=require('./src/models/meetData')
 var userdata=require('./src/models/userData')
 var chatdata=require('./src/models/chatData')
@@ -18,7 +19,27 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 const port = process.env.PORT || 5200;
 
-app.post('/createMeet',(req,res)=>{
+
+function verifyUserToken(req, res,next) {
+
+  if(!req.headers.userauthorization) {
+      return res.status(401).send('Unauthorized request4')
+    }
+    let token = req.headers.userauthorization.split(' ')[1]
+    if(token === null) {
+      return res.status(401).send('Unauthorized request5')    
+    }
+    let payload = jwt.verify(token, 'userKey')
+
+    if(!payload) {
+      return res.status(401).send('Unauthorized request6')    
+    }
+    req.userId = payload.subject
+    next()
+}
+
+
+app.post('/createMeet',verifyUserToken,(req,res)=>{
     console.log(req.body);
     var data={
         name:req.body.data.meet,
@@ -31,13 +52,17 @@ app.post('/createMeet',(req,res)=>{
   })
 })
 
-app.get('/getMeet',(req,res)=>{
+app.get('/getMeet',verifyUserToken,(req,res)=>{
     meetData.find().then((data)=>{
       res.send(data)
     })
+    .catch((err)=>{
+      console.log(err);
+      res.send({err})
+    })
 })
 
-app.get('/deleteMeet/:id',(req,res)=>{
+app.get('/deleteMeet/:id',verifyUserToken,(req,res)=>{
   meetData.findByIdAndDelete({_id:req.params.id}).then((data)=>{
     res.send(data)
   })
@@ -85,8 +110,9 @@ app.post('/login',(req,res)=>{
           .then((response)=>{
               if(response){
                   console.log("user");
-                
-                  res.status(200).send({user:user})
+                  let payload = {subject: req.body.data.email+user.password}
+                  let token = jwt.sign(payload, 'userKey')
+                  res.status(200).send({user:user,token:token})
                   
                   console.log("success");
               }else{
@@ -101,7 +127,7 @@ app.post('/login',(req,res)=>{
   })
 })
 
-app.get('/chatHistory/:item', (req, res) => {
+app.get('/chatHistory/:item',verifyUserToken, (req, res) => {
   const room = req.params.item;
   chatdata.find({ room:room  })
     // Userdata.findOne({"email":email})

@@ -24,6 +24,8 @@ export class LoginComponent implements OnInit {
         alert("Login Success")
         console.log(data.mail);
         sessionStorage.setItem("loginmail",this.user.email)
+        sessionStorage.setItem("token",data.token)
+
         console.log(data);
         this.router.navigate(['/'])
         
