@@ -30,4 +30,8 @@ export class ChatService {
 
     return observable;
   }
+
+  chatHistory(item:any){
+    return this.http.get<any>(`${this.server_address}/chatHistory/`+item);
+  }
 }

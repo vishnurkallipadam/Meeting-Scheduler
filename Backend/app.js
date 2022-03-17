@@ -4,6 +4,7 @@ var cors = require('cors')
 var path = require('path');
 var meetData=require('./src/models/meetData')
 var userdata=require('./src/models/userData')
+var chatdata=require('./src/models/chatData')
 var bcrypt = require('bcrypt')
 let http = require('http');
 let server = http.Server(app);
@@ -100,6 +101,19 @@ app.post('/login',(req,res)=>{
   })
 })
 
+app.get('/chatHistory/:item', (req, res) => {
+  const room = req.params.item;
+  chatdata.find({ room:room  })
+    // Userdata.findOne({"email":email})
+    .then((otheruserdetail)=>{
+        res.send(otheruserdetail);
+     // console.log(otheruserdetail)
+    })
+    .catch((err)=>{
+      res.send({err})
+    })
+})
+
 
 console.log("b4 connection");
 
@@ -112,10 +126,31 @@ io.on('connection', (socket) => {
 
     socket.on('message',(data)=>{
       console.log(data);
+      let date_ob = new Date();
+        var chatsdata={
+          user:data.user,
+          room:data.room,
+          message:data.message,
+          date:new Date().toLocaleDateString(),
+          time:formatAMPM(new Date)
+        }
+        var data=new chatdata(chatsdata);
+        data.save();
       io.emit(`${data.room}`, data);
     })  
 });
 
+
+function formatAMPM(date) {
+  var hours = date.getHours();
+  var minutes = date.getMinutes();
+  var ampm = hours >= 12 ? 'pm' : 'am';
+  hours = hours % 12;
+  hours = hours ? hours : 12; // the hour '0' should be '12'
+  minutes = minutes < 10 ? '0'+minutes : minutes;
+  var strTime = hours + ':' + minutes + ' ' + ampm;
+  return strTime;
+}
 
 
 server.listen(port, () => {

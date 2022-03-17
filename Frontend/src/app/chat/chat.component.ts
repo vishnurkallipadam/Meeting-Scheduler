@@ -10,7 +10,20 @@ export class ChatComponent implements OnInit {
   constructor(private chat:ChatService) { }
   messageArray:any=[]
   message:any=''
+  mail:any=''
   ngOnInit(): void {
+    let id = sessionStorage.getItem("joinedId")
+    this.mail=sessionStorage.getItem("loginmail")
+    this.chat.chatHistory(id).subscribe(
+      data=>{
+        this.messageArray=JSON.parse(JSON.stringify(data))
+      }
+    )
+
+
+  }
+
+  ngAfterViewInit(){
     this.chat.newMessageReceived()
     .subscribe(data =>          
       this.messageArray.push(data)
