@@ -16,7 +16,11 @@ export class ChatComponent implements OnInit {
     this.mail=sessionStorage.getItem("loginmail")
     this.chat.chatHistory(id).subscribe(
       data=>{
-        this.messageArray=JSON.parse(JSON.stringify(data))
+        this.messageArray=JSON.parse(JSON.stringify(data.messages))
+      },
+      err=>{
+        console.log(err);
+         
       }
     )
 

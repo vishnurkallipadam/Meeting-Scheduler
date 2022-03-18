@@ -1,7 +1,5 @@
 // assesing mongoose package
 const mongoose = require('mongoose');
-// database connection
-mongoose.connect('mongodb://localhost:27017/scheduler');
 
 // schema definition
 const schema = mongoose.Schema;

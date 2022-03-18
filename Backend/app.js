@@ -1,11 +1,17 @@
+require('dotenv').config()
 var express = require('express');
 const app = express();
 var cors = require('cors')
 var path = require('path');
 const jwt = require('jsonwebtoken')
+
+const mongoose = require('mongoose');
+mongoose.connect(process.env.DBURL);
+
 var meetData=require('./src/models/meetData')
 var userdata=require('./src/models/userData')
 var chatdata=require('./src/models/chatData')
+
 var bcrypt = require('bcrypt')
 let http = require('http');
 let server = http.Server(app);
@@ -29,7 +35,7 @@ function verifyUserToken(req, res,next) {
     if(token === null) {
       return res.status(401).send('Unauthorized request5')    
     }
-    let payload = jwt.verify(token, 'userKey')
+    let payload = jwt.verify(token, process.env.JWTTOKEN)
 
     if(!payload) {
       return res.status(401).send('Unauthorized request6')    
@@ -48,23 +54,30 @@ app.post('/createMeet',verifyUserToken,(req,res)=>{
     }
     var meetdata=new meetData(data);
     meetdata.save().then(()=>{
-    res.send()
+    res.send({success:true})
+  })
+  .catch((e)=>{
+    res.send({success:false,message:e.message})
   })
 })
 
 app.get('/getMeet',verifyUserToken,(req,res)=>{
     meetData.find().then((data)=>{
-      res.send(data)
+      res.send({success:true,data})
     })
     .catch((err)=>{
       console.log(err);
-      res.send({err})
+      res.send({success:false,message:err.message})
     })
 })
 
 app.get('/deleteMeet/:id',verifyUserToken,(req,res)=>{
-  meetData.findByIdAndDelete({_id:req.params.id}).then((data)=>{
-    res.send(data)
+  meetData.findByIdAndDelete({_id:req.params.id})
+  .then((data)=>{
+    res.send({success:true,data})
+  })
+  .catch((e)=>{
+    res.send({success:false})
   })
 })
 
@@ -79,7 +92,7 @@ app.post('/register',async(req,res)=>{
   userdata.findOne({email:item.email})
   .then(async(data)=>{
       if(data){
-        res.status(401).send('User Already Exist')
+        res.status(401).send({message:'User Already Exist',success:false})
       }else{
         console.log(item.password);
           item.password=await bcrypt.hash(item.password,10)
@@ -87,11 +100,11 @@ app.post('/register',async(req,res)=>{
           user.save(
               err=>{
                   console.log(err);
-                  res.send(err)
+                  res.send({success:false,message:err.message})
               },
               data=>{
                   console.log("Registration Successfull");
-                  res.send({})
+                  res.send({success:true,message:"Registration Successfull"})
               }  
           )
       }
@@ -99,9 +112,6 @@ app.post('/register',async(req,res)=>{
 })
 
 app.post('/login',(req,res)=>{
-  console.log("login");
-  res.header("Acces-Control-Allow-Origin","*");
-  res.header("Acces-Control-Allow-Methods: GET, POST, PATH, PUT, DELETE, HEAD"); 
   console.log(req.body);
   userdata.findOne({email:req.body.data.email},(err,user)=>{
       console.log(user);
@@ -111,18 +121,18 @@ app.post('/login',(req,res)=>{
               if(response){
                   console.log("user");
                   let payload = {subject: req.body.data.email+user.password}
-                  let token = jwt.sign(payload, 'userKey')
-                  res.status(200).send({user:user,token:token})
+                  let token = jwt.sign(payload, process.env.JWTTOKEN)
+                  res.status(200).send({success:true,user:user,token:token})
                   
                   console.log("success");
               }else{
                   console.log("failed");
-                  res.status(401).send('Invalid user Password')
+                  res.status(401).send({success:false,message:'Invalid user Password'})
               }
           })   
       }else{
           console.log("failed");
-          res.status(401).send('Invalid credential')
+          res.status(401).send({success:false,message:'Invalid credential'})
       }
   })
 })
@@ -130,13 +140,11 @@ app.post('/login',(req,res)=>{
 app.get('/chatHistory/:item',verifyUserToken, (req, res) => {
   const room = req.params.item;
   chatdata.find({ room:room  })
-    // Userdata.findOne({"email":email})
     .then((otheruserdetail)=>{
-        res.send(otheruserdetail);
-     // console.log(otheruserdetail)
+        res.send({success:true,messages:otheruserdetail});
     })
     .catch((err)=>{
-      res.send({err})
+      res.send({success:false,message:err.message})
     })
 })
 
