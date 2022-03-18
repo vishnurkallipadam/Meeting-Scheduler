@@ -132,7 +132,17 @@ export class MeetComponent implements OnInit {
   changeVideoResolution(height:any,width:any){
     this.height=height
     this.width=width
-    this.ngAfterViewInit()
+    
+    this.stream.getTracks().forEach((track:any) => {
+      if(track.kind=='video'){
+        track.applyConstraints({
+          width: width,
+          height: height
+        });
+        
+      }
+      });
+  
   }
 
   joinVideo(){
