@@ -4,6 +4,7 @@ const app = express();
 var cors = require('cors')
 var path = require('path');
 const jwt = require('jsonwebtoken')
+const helmet = require("helmet");
 
 const mongoose = require('mongoose');
 mongoose.connect(process.env.DBURL);
@@ -22,6 +23,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(helmet());
 
 const port = process.env.PORT || 5200;
 
