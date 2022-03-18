@@ -1,20 +1,20 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  server_address:String = 'http://localhost:5200';
   constructor(private http:HttpClient) { }
 
   registerUser(data:any){
-    return this.http.post<any>(`${this.server_address}/register`,{data})
+    return this.http.post<any>(`${environment.url}/register`,{data})
   }
 
   loginUser(data:any){
-    return this.http.post<any>(`${this.server_address}/login`,{data})
+    return this.http.post<any>(`${environment.url}/login`,{data})
 
   }
 

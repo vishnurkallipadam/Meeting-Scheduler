@@ -2,16 +2,17 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatService {
   private socket: Socket;
-  server_address:String = 'http://localhost:5200';
+ 
 
   constructor(private http:HttpClient) { 
-    this.socket = io('http://localhost:5200',{ transports: ['websocket','polling', 'flashback']})
+    this.socket = io(environment.url,{ transports: ['websocket','polling', 'flashback']})
   }
 
 
@@ -32,6 +33,6 @@ export class ChatService {
   }
 
   chatHistory(item:any){
-    return this.http.get<any>(`${this.server_address}/chatHistory/`+item);
+    return this.http.get<any>(`${environment.url}/chatHistory/`+item);
   }
 }

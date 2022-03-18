@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -7,18 +8,18 @@ import { HttpClient } from '@angular/common/http';
 export class MeetService {
 
   constructor(private http:HttpClient) { }
-  server_address:String = 'http://localhost:5200';
+  
   addMeet(data:any){
     console.log(data);
-    return this.http.post<any>(`${this.server_address}/createMeet`,{data})
+    return this.http.post<any>(`${environment.url}/createMeet`,{data})
   }
 
   getMeet(){
-    return this.http.get<any>(`${this.server_address}/getMeet`)
+    return this.http.get<any>(`${environment.url}/getMeet`)
   }
 
   deleteMeet(id:any){
-    return this.http.get<any>(`${this.server_address}/deleteMeet/`+id)
+    return this.http.get<any>(`${environment.url}/deleteMeet/`+id)
 
   }
 }
