@@ -54,7 +54,7 @@ export class MeetComponent implements OnInit {
 
   ngAfterViewInit(){
   
-  var constraints = { audio: { deviceId: this.audioId } , video: { deviceId: this.videoId, height:this.height, width:this.width } };
+  var constraints = { audio: true , video: true  };
 
 // var constraints = { audio: false , video: false };
 
@@ -68,45 +68,37 @@ export class MeetComponent implements OnInit {
     // this.video.play();
     
   }
-  // const audioContext = new AudioContext();
-  // const analyser = audioContext.createAnalyser();
-  // const microphone = audioContext.createMediaStreamSource(mediaStream);
-  // const scriptProcessor = audioContext.createScriptProcessor(2048, 1, 1);
-
-  // analyser.smoothingTimeConstant = 0.8;
-  // analyser.fftSize = 1024;
-
-  // microphone.connect(analyser);
-  // analyser.connect(scriptProcessor);
-  // scriptProcessor.connect(audioContext.destination);
-  // scriptProcessor.onaudioprocess = ()=>{
-  //   const array = new Uint8Array(analyser.frequencyBinCount);
-  //   analyser.getByteFrequencyData(array);
-  //   const arraySum = array.reduce((a, value) => a + value, 0);
-  //   const average = arraySum / array.length;
-  //   // this.volume=Math.round(average)
-  //   // console.log(this.volume);
-  //   this.volume = document.getElementById('volume')
-  //   this.volume.setAttribute("value",Math.round(average))
-    
-    // colorPids(average);
-  // };
+ 
 })
 .catch(function(err) { console.log(err.name + ": " + err.message); }); // always check for errors at the end.
 
     
   }
-
  
   changeAudio(device:any){
-    this.audioId=device.id
-    this.ngAfterViewInit()
+    // this.audioId=device.id
+    // this.ngAfterViewInit()
+    this.stream.getTracks().forEach((track:any) => {
+      if(track.kind=='audio'){
+        track.applyConstraints({
+          deviceId:{exact:device}
+        });
+        
+      }
+      });
+  
   }
 
   changeVideo(device:any){
-    this.videoId=device.id
-    this.ngAfterViewInit()
-
+    this.stream.getTracks().forEach((track:any) => {
+      if(track.kind=='video'){
+        track.applyConstraints({
+          deviceId:{exact:device}
+        });
+        
+      }
+      });
+  
   }
 
 
@@ -116,7 +108,7 @@ export class MeetComponent implements OnInit {
           track.stop();
           this.a="off"
           console.log(this.a);
-   
+         
       }
       });
   }
@@ -130,9 +122,7 @@ export class MeetComponent implements OnInit {
   }
 
   changeVideoResolution(height:any,width:any){
-    this.height=height
-    this.width=width
-    
+  
     this.stream.getTracks().forEach((track:any) => {
       if(track.kind=='video'){
         track.applyConstraints({
