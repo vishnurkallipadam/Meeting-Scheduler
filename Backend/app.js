@@ -69,7 +69,7 @@ app.get('/getMeet',verifyUserToken,(req,res)=>{
     })
     .catch((err)=>{
       console.log(err);
-      res.send({success:false,message:err.message})
+      res.send({success:false,message:err})
     })
 })
 
@@ -146,7 +146,7 @@ app.get('/chatHistory/:item',verifyUserToken, (req, res) => {
         res.send({success:true,messages:otheruserdetail});
     })
     .catch((err)=>{
-      res.send({success:false,message:err.message})
+      res.send({success:false,message:err})
     })
 })
 

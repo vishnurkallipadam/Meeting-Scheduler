@@ -25,7 +25,7 @@ export class HomeComponent implements OnInit {
         this.meetArray=JSON.parse(JSON.stringify(data.data))
       },
       err=>{
-        console.log(err.message);
+        console.log(err);
         
       }
     )
