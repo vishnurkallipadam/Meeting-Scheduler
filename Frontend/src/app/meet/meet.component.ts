@@ -21,9 +21,9 @@ export class MeetComponent implements OnInit {
   height:any
   width:any
   videostatus:any=''
-  v:any="on";
+  v:any='on';
   joined:any="off"
-  a:any="on";
+  a:any='on';
   ngOnInit(): void {
     
     if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
@@ -51,14 +51,14 @@ export class MeetComponent implements OnInit {
     });
 
   }
+   constraints = { audio: true , video: true  };
 
   ngAfterViewInit(){
   
-  var constraints = { audio: true , video: true  };
 
 // var constraints = { audio: false , video: false };
 
- navigator.mediaDevices.getUserMedia(constraints)
+ navigator.mediaDevices.getUserMedia(this.constraints)
 .then((mediaStream)=>{
  this.stream=mediaStream
   this.video = document.querySelector("video")
@@ -103,23 +103,45 @@ export class MeetComponent implements OnInit {
 
 
   muteAudio(){
-    this.stream.getTracks().forEach((track:any) => {
-      if(track.kind=='audio'){
-          track.stop();
-          this.a="off"
-          console.log(this.a);
-         
-      }
-      });
+    if(this.v=='off'){
+      alert("You cant mute both Audio and Video")
+
+    }else{
+      this.a='off'
+      console.log("audio:"+this.a);
+      
+     this.constraints.audio=false
+     this.ngAfterViewInit()
+    }
   }
 
   muteVideo(){
-    this.stream.getTracks().forEach((track:any) => {
-      if(track.kind=='video'){
-          track.stop();
-      }
-      });
+    if(this.a=='off'){
+      alert("You cant mute both Audio and Video")
+    }else{
+      this.v='off'
+      console.log("video:"+this.v);
+     this.constraints.video=false
+     this.ngAfterViewInit()
+    }
   }
+
+  unmuteAudio(){
+      this.a='on'
+      console.log("audio:"+this.a);
+      
+     this.constraints.audio=true
+     this.ngAfterViewInit()
+  }
+
+  unmuteVideo(){
+      this.v='on'
+      console.log("video:"+this.v);
+     this.constraints.video=true
+     this.ngAfterViewInit()
+  }
+
+  
 
   changeVideoResolution(height:any,width:any){
   

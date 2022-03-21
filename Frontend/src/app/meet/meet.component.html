@@ -5,8 +5,12 @@
                 <video #video  id="videoplot" autoplay></video>
                 <div style="margin-left: 15rem;">
              
-                    <button (click)="muteAudio()" class="btn btn-primary">Mute audio</button>
-                    <button (click)="muteVideo()" class="btn btn-primary">Mute Video</button>
+                    <button (click)="muteAudio()" *ngIf="this.a=='on'" class="btn btn-primary">Mute audio</button>
+                    <button (click)="unmuteAudio()" *ngIf="this.a=='off'" class="btn btn-primary">Unmute audio</button>
+
+                    <button (click)="muteVideo()" *ngIf="this.v=='on'" class="btn btn-primary">Mute Video</button>
+                    <button (click)="unmuteVideo()" *ngIf="this.v=='off'" class="btn btn-primary">Unmute Video</button>
+
                     <button (click)="joinVideo()" class="btn btn-primary">JOIN</button>
                   </div>
 
