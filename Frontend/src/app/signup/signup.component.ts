@@ -33,10 +33,12 @@ export class SignupComponent implements OnInit {
       data=>{
         console.log("signup success");
         alert("register success")
+        this.router.navigate(['/login'])
         
       },
       err=>{
         console.log(err.error);
+        alert(err.error.message)
         
       }
 

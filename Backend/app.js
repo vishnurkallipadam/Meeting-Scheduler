@@ -102,7 +102,7 @@ app.post('/register',async(req,res)=>{
           user.save(
               err=>{
                   console.log(err);
-                  res.send({success:false,message:err.message})
+                  res.send({success:false,message:err})
               },
               data=>{
                   console.log("Registration Successfull");
