@@ -30,10 +30,10 @@ const port = process.env.PORT || 5200;
 
 function verifyUserToken(req, res,next) {
 
-  if(!req.headers.userauthorization) {
+  if(!req.headers.authorization) {
       return res.status(401).send('Unauthorized request4')
     }
-    let token = req.headers.userauthorization.split(' ')[1]
+    let token = req.headers.authorization.split(' ')[1]
     if(token === null) {
       return res.status(401).send('Unauthorized request5')    
     }

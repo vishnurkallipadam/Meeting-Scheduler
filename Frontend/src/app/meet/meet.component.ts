@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
+
+
+
 @Component({
   selector: 'app-meet',
   templateUrl: './meet.component.html',
@@ -165,8 +168,12 @@ export class MeetComponent implements OnInit {
   }
   
   ngOnDestroy() {
+    
     this.stream.getTracks().forEach((track:any) => {  
           track.stop();
       });
   }
+  conference:any
+
+
 }

@@ -96,7 +96,10 @@
             "styles": [
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [
+              "src/assets/owt.js",
+              "./node_modules/jquery/dist/jquery.min.js"
+            ]
           }
         }
       }
