@@ -1,4 +1,6 @@
+import { ThisReceiver } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { ChatService } from '../chat.service';
 import { MeetService } from '../meet.service';
@@ -12,7 +14,7 @@ declare var $:any
   styleUrls: ['./chat.component.css']
 })
 export class ChatComponent implements OnInit {
-  constructor(private chat:ChatService,private meet:MeetService) { }
+  constructor(private chat:ChatService,private meet:MeetService,private router:Router) { }
   messageArray:any=[]
   message:any=''
   mail:any=''
@@ -37,6 +39,8 @@ export class ChatComponent implements OnInit {
   unmuteAudioButton:any
   unmuteVideoButton:any
   myId:any
+  streamId:any
+  leaveMeeting:any
 
   ngOnInit(): void {
    
@@ -48,6 +52,8 @@ this.muteVideoButton=document.getElementById("muteVideo")
 this.unmuteAudioButton=document.getElementById("unmuteAudio")
 this.unmuteVideoButton=document.getElementById("unmuteVideo")
 
+
+this.leaveMeeting=document.getElementById("leaveMeeting")
 
     this.room = sessionStorage.getItem("joinedId")
     this.mail=sessionStorage.getItem("loginmail")
@@ -75,13 +81,13 @@ this.unmuteVideoButton=document.getElementById("unmuteVideo")
 
       
      
-      
-      this.meet.createToken(this.room, 'user', 'presenter').subscribe( (response:any) => {
+      let loginmail=sessionStorage.getItem("loginmail");
+      this.meet.createToken(this.room, loginmail, 'presenter').subscribe( (response:any) => {
         // console.log(response);
         this.conference = new Owt.Conference.ConferenceClient();
         var token = response;
         this.conference.join(token).then((resp:any) => {
-          // console.log(resp);
+          //  console.log(resp);
           
             this.myId  = resp.self.id;
             let myRoom = resp.id;
@@ -125,10 +131,12 @@ this.unmuteVideoButton=document.getElementById("unmuteVideo")
                     this.conference.publish(this.localStream, publishOption).then((publication:any) => {
                         this.publicationGlobal = publication;
                         console.log("publication",publication);
+                        this.streamId=publication.id
                         
                         this.meet.mixStream(myRoom, publication.id, 'common')
                         .subscribe((data)=>{
-                          console.log(data);
+                         
+                          this.streamId=data.id
                           
                         },err=>{console.log(err);
                         })
@@ -193,8 +201,15 @@ this.unmuteVideoButton=document.getElementById("unmuteVideo")
                         })
 
                         this.conference.addEventListener('streamadded', (event:any) => {
-                          console.log('A new stream is added ', event.stream.id);
-                          let isSelf=this.myId
+                       console.log(event);
+                       
+                          
+                          if(event.stream.id!==this.streamId){
+                            console.log(this.streamId);
+                            
+                            console.log('A new stream is added ', event.stream.id);
+                          }
+                          let isSelf=this.streamId
                           isSelf = isSelf?isSelf:event.stream.id != this.publicationGlobal.id;
                           this.subscribeForward && isSelf && this.subscribeAndRenderVideo(event.stream);
                           this.meet.mixStream(myRoom, event.stream.id, 'common').subscribe(()=>{})
@@ -203,6 +218,8 @@ this.unmuteVideoButton=document.getElementById("unmuteVideo")
                           });
                       });
 
+
+                     
                         
                         
                     });
@@ -211,6 +228,28 @@ this.unmuteVideoButton=document.getElementById("unmuteVideo")
                         err);
                 });
             }
+            console.log("RSPONSE",resp);
+            
+            this.leaveMeeting.addEventListener('click',()=>{
+                       
+                          
+              this.conference.leave().then((response:any)=>{
+                console.log(response);
+                
+               alert("you left the meeting");
+               this.router.navigate(['/'])
+               
+                
+               
+
+              })
+              .catch((err:any)=>{
+                console.log(err);
+                
+              })
+            })
+
+
             var streams = resp.remoteStreams;
             // console.log(streams);
             
@@ -219,12 +258,14 @@ this.unmuteVideoButton=document.getElementById("unmuteVideo")
                   if (stream.source.audio === 'mixed' || stream.source.video ===
                     'mixed') {
                   
+                  console.log(" mixed");
                       
                     this.subscribeAndRenderVideo(stream);
                   }
-                } else if (stream.source.audio !== 'mixed') {
+                } else if (stream.source.audio !== 'mixed' || stream.source.video !== 'mixed') {
                  
-
+                  console.log("non mixed");
+                  
                     this.subscribeAndRenderVideo(stream);
                 }
             }
@@ -241,9 +282,14 @@ this.unmuteVideoButton=document.getElementById("unmuteVideo")
     });
 
 
+    this.conference.addEventListener('left', (event:any) => {
+      console.log(event);
+     });
+
 
     
   }
+  
 
   sendMessage(){
 
@@ -256,6 +302,7 @@ this.unmuteVideoButton=document.getElementById("unmuteVideo")
   }
   subscirptionLocal:any
    subscribeAndRenderVideo(stream:any){
+    console.log(stream);
     
      
     this.conference.subscribe(stream)
@@ -266,10 +313,23 @@ this.unmuteVideoButton=document.getElementById("unmuteVideo")
     
       
      this.videoStream.srcObject = stream.mediaStream;
+
+
+     subscription.addEventListener('mute', (event:any) => {
+      console.log(event);
+     });
+
      
   }, (err:any)=>{ console.log('subscribe failed', err);
   });
+
+
+  
    
 }
+
+
+
+
 
 }

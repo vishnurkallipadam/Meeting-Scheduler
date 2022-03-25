@@ -7,7 +7,12 @@ import { environment } from 'src/environments/environment';
 })
 export class MeetService {
 
+    //mixed stream
   roomId:any='623abb207ac3cc04053b83fd'
+
+
+  // roomId:any='623c5ca5d4b369040abbca99'
+
   constructor(private http:HttpClient) { }
   
   addMeet(data:any){
@@ -52,7 +57,7 @@ export class MeetService {
           url: environment.url,
           media: {
               audio: 'auto',
-              video: true
+              video: true   
           },
           transport: {
               protocol: 'udp',
