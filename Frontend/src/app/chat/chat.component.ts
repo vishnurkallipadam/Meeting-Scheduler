@@ -29,6 +29,7 @@ export class ChatComponent implements OnInit {
   videoStream:any
   publicationGlobal:any
   subscribeForward:any
+  participants:any=[]
  
   audio:any='on'
   videos:any='on'
@@ -89,6 +90,8 @@ this.leaveMeeting=document.getElementById("leaveMeeting")
         this.conference.join(token).then((resp:any) => {
           //  console.log(resp);
           
+        
+         
             this.myId  = resp.self.id;
             let myRoom = resp.id;
             // this.mediaUrl="localhost"
@@ -137,6 +140,9 @@ this.leaveMeeting=document.getElementById("leaveMeeting")
                         .subscribe((data)=>{
                          
                           this.streamId=data.id
+                          this.muteAudioButton.style.display='block';
+          this.muteVideoButton.style.display='block'
+          this.leaveMeeting.style.display='block';
                           
                         },err=>{console.log(err);
                         })
@@ -201,6 +207,7 @@ this.leaveMeeting=document.getElementById("leaveMeeting")
                         })
 
                         this.conference.addEventListener('streamadded', (event:any) => {
+                          this.getParticipant()
                        console.log(event);
                        
                           
@@ -227,6 +234,11 @@ this.leaveMeeting=document.getElementById("leaveMeeting")
                     console.error('Failed to create MediaStream, ' +
                         err);
                 });
+                this.conference.addEventListener('left', (event:any) => {
+                  this.getParticipant()
+                  console.log(event);
+                 });
+            
             }
             console.log("RSPONSE",resp);
             
@@ -262,7 +274,9 @@ this.leaveMeeting=document.getElementById("leaveMeeting")
                       
                     this.subscribeAndRenderVideo(stream);
                   }
-                } else if (stream.source.audio !== 'mixed' || stream.source.video !== 'mixed') {
+              
+                }
+                 else if (stream.source.audio !== 'mixed' || stream.source.video !== 'mixed') {
                  
                   console.log("non mixed");
                   
@@ -282,10 +296,7 @@ this.leaveMeeting=document.getElementById("leaveMeeting")
     });
 
 
-    this.conference.addEventListener('left', (event:any) => {
-      console.log(event);
-     });
-
+   
 
     
   }
@@ -301,6 +312,7 @@ this.leaveMeeting=document.getElementById("leaveMeeting")
         }
   }
   subscirptionLocal:any
+  videospace:any
    subscribeAndRenderVideo(stream:any){
     console.log(stream);
     
@@ -308,28 +320,46 @@ this.leaveMeeting=document.getElementById("leaveMeeting")
     this.conference.subscribe(stream)
     .then((subscription:any)=>{
       this.subscirptionLocal = subscription;
-      // console.log(subscription);
-      // console.log("stream:",stream);
-    
-      
-     this.videoStream.srcObject = stream.mediaStream;
+      console.log(subscription);
+      console.log("stream:",stream);
+     this.videospace=document.getElementById('videospace')
+      let $video = $(`<video autoplay id=${stream.id}  style="display:block" >this browser does not supported video tag</video>`);
+      $video.get(0).srcObject = stream.mediaStream;
+     $('p').append($video);
 
 
      subscription.addEventListener('mute', (event:any) => {
       console.log(event);
      });
 
+     stream.addEventListener('ended', () => {
+      this.removeUi(stream.id);
+      this.getParticipant()
+     
+  });
      
   }, (err:any)=>{ console.log('subscribe failed', err);
   });
 
-
   
-   
+  
 }
 
+getParticipant(){
+  this.meet.getPaticipants(this.room).subscribe((data:any)=>{
+    console.log(data);
+    this.participants=data
+    console.log(this.participants);
+    
+  },
+  (err:any)=>{console.log(err);
+  })
+  
+}
 
-
+ removeUi(id:any){
+  $(`#${id}`).remove();
+}
 
 
 }

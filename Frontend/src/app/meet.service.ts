@@ -8,9 +8,9 @@ import { environment } from 'src/environments/environment';
 export class MeetService {
 
     //mixed stream
-  roomId:any='623abb207ac3cc04053b83fd'
+  roomId:any='623abb207ac3cc04053b83fd' //mixed stream
 
-
+  // roomId:any='623d87a78f747a0407f8587b' //single and surrounded
   // roomId:any='623c5ca5d4b369040abbca99'
 
   constructor(private http:HttpClient) { }
@@ -50,6 +50,9 @@ export class MeetService {
   return this.http.patch<any>(`${environment.myHost}/rooms/${rooms}/streams/${stream}`,jsonPatch)
   }
 
+  getPaticipants(roomId:any){
+    return this.http.get<any>(` ${environment.myHost}/rooms/${this.roomId}/participants`)
+  }
   startStreamingIn(room:any, inUrl:any){
 
     let rooms=this.roomId
