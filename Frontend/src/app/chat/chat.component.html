@@ -2,88 +2,95 @@
   
   <video #video  id="videoplots" autoplay></video>
   
+
 </div> -->
-<div id="videospace">
-  <p style="width: 100%; height: 85%;"></p>
-  <!-- <video #videoplot style="height: 85vh; width: 100%;"  id="videoplot" autoplay></video> -->
-  <div>
-    <button  id="muteAudio"  style="display: none;"   class="btn btn-primary">Mute audio</button>
-    <button  id="unmuteAudio" style="display: none;"  class="btn btn-primary">unMute audio</button>
-    <button  id="muteVideo"   style="display: none;"  class="btn btn-primary">Mute Video</button>
-    <button  id="unmuteVideo"  style="display: none;" class="btn btn-primary">unMute Video</button>
-    <button  id="leaveMeeting"  style="display: none;"   class="btn btn-danger">Leave</button>
+<div class="container">
 
-  </div>
-
-</div>
-
-
-<ul>
-  <li *ngFor="let i of participants">{{i.user}}</li>
-</ul>
-
-<button data-bs-toggle="modal" data-bs-target="#myModal" class="btn btn-primary">Show Chat</button>
-
-
- <!-- The Modal -->
- <div class="modal" id="myModal">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-
-
-
-      <!-- Modal body -->
-      <div class="modal-body">
-        <button type="button"  class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
-          
-        <section class="msger">
-   
-  
-          <main class="msger-chat" *ngFor="let i of messageArray">
-            <div class="msg left-msg" *ngIf="i.user!==mail">
-              
-        
-              <div class="msg-bubble">
-                <div class="msg-info">
-                  <div class="msg-info-name"><h6 style="color: rgb(184, 184, 184);">{{i.user}}</h6></div>
-                  <div class="msg-info-time"></div>
-                </div>
-        
-                <div class="msg-text">
-                  <h6 style="color: black;">{{i.message}}</h6>
-                </div>
-              </div>
-            </div>
-        
-            <div class="msg right-msg" *ngIf="i.user==mail" >
-              
-              <div class="msg-bubble">
-                <div class="msg-info">
-                  <div class="msg-info-name"><h6 style="color: rgb(184, 184, 184);">{{i.user}}</h6></div>
-                  <div class="msg-info-time"></div>
-                </div>
-        
-                <div class="msg-text">
-                  <h6 style="color: black;">{{i.message}}</h6>
-                </div>
-              </div>
-            </div>
-          </main>
-        
-          <form (submit)="sendMessage()" class="msger-inputarea">
-            <input [(ngModel)]="message" name="mmessage" type="text" class="msger-input" placeholder="Enter your message...">
-            <button type="submit" [disabled]=""  class="msger-send-btn">Send</button>
-          </form>
-        </section>
+  <div id="videospace">
+    <p style="width: 100%; height: 85%;"></p>
+    <!-- <video #videoplot style="height: 85vh; width: 100%;"  id="videoplot" autoplay></video> -->
+    <div>
+      <button  id="muteAudio"  style="display: none;"   class="btn btn-primary">Mute audio</button>
+      <button  id="unmuteAudio" style="display: none;"  class="btn btn-primary">unMute audio</button>
+      <button  id="muteVideo"   style="display: none;"  class="btn btn-primary">Mute Video</button>
+      <button  id="unmuteVideo"  style="display: none;" class="btn btn-primary">unMute Video</button>
+      <button  id="leaveMeeting"  style="display: none;"   class="btn btn-danger">Leave</button>
+      <button  id="shareScreen" (click)="shareScreenFunc()" style="display: none;"   class="btn btn-info">Share screen</button>
+      <button  id="stopshareScreen" style="display: none;" class="btn btn-info">Stop Share screen</button>
       
+
+    </div>
+  
+  </div>
+  
+  
+  <ul>
+    <li *ngFor="let i of participants">{{i.user}}</li>
+  </ul>
+  
+  <button data-bs-toggle="modal" data-bs-target="#myModal" class="btn btn-primary">Show Chat</button>
+  
+  
+   <!-- The Modal -->
+   <div class="modal" id="myModal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+  
+  
+  
+        <!-- Modal body -->
+        <div class="modal-body">
+          <button type="button"  class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+            
+          <section class="msger">
      
-      </div>
-
-      <!-- Modal footer -->
-      <div class="modal-footer">
+    
+            <main class="msger-chat" *ngFor="let i of messageArray">
+              <div class="msg left-msg" *ngIf="i.user!==mail">
+                
+          
+                <div class="msg-bubble">
+                  <div class="msg-info">
+                    <div class="msg-info-name"><h6 style="color: rgb(184, 184, 184);">{{i.user}}</h6></div>
+                    <div class="msg-info-time"></div>
+                  </div>
+          
+                  <div class="msg-text">
+                    <h6 style="color: black;">{{i.message}}</h6>
+                  </div>
+                </div>
+              </div>
+          
+              <div class="msg right-msg" *ngIf="i.user==mail" >
+                
+                <div class="msg-bubble">
+                  <div class="msg-info">
+                    <div class="msg-info-name"><h6 style="color: rgb(184, 184, 184);">{{i.user}}</h6></div>
+                    <div class="msg-info-time"></div>
+                  </div>
+          
+                  <div class="msg-text">
+                    <h6 style="color: black;">{{i.message}}</h6>
+                  </div>
+                </div>
+              </div>
+            </main>
+          
+            <form (submit)="sendMessage()" class="msger-inputarea">
+              <input [(ngModel)]="message" name="mmessage" type="text" class="msger-input" placeholder="Enter your message...">
+              <button type="submit" [disabled]=""  class="msger-send-btn">Send</button>
+            </form>
+          </section>
         
+       
+        </div>
+  
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          
+        </div>
+  
       </div>
-
     </div>
   </div>
 </div>

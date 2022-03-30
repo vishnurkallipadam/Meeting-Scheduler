@@ -81,6 +81,9 @@ export class MeetComponent implements OnInit {
   changeAudio(device:any){
     // this.audioId=device.id
     // this.ngAfterViewInit()
+    console.log(device);
+    
+    sessionStorage.setItem('audio',device.deviceId)
     this.stream.getTracks().forEach((track:any) => {
       if(track.kind=='audio'){
         track.applyConstraints({
@@ -93,6 +96,9 @@ export class MeetComponent implements OnInit {
   }
 
   changeVideo(device:any){
+    // console.log(device);
+    
+    sessionStorage.setItem('video',device.deviceId)
     this.stream.getTracks().forEach((track:any) => {
       if(track.kind=='video'){
         track.applyConstraints({
@@ -147,7 +153,11 @@ export class MeetComponent implements OnInit {
   
 
   changeVideoResolution(height:any,width:any){
-  
+    let resolution={
+      height:height,
+      width:width
+    }
+    sessionStorage.setItem('resolution',resolution.toString())
     this.stream.getTracks().forEach((track:any) => {
       if(track.kind=='video'){
         track.applyConstraints({
