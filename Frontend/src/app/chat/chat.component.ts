@@ -49,25 +49,31 @@ export class ChatComponent implements OnInit {
   shareYourScreen:any
 
   stopShareScreen:any;
+  showChat:any
 
-  
-
+  audioId:any
+  videoId:any
   token:any
+
+  mediaStream:any
+  showPaticipants:any
 
   ngOnInit(): void {
     this.video = document.querySelector('video');
     this.videoStream = document.getElementById('videoplot');
     this.muteAudioButton = document.getElementById('muteAudio');
     this.muteVideoButton = document.getElementById('muteVideo');
-
+    this.showChat = document.getElementById('showChat');
     this.unmuteAudioButton = document.getElementById('unmuteAudio');
     this.unmuteVideoButton = document.getElementById('unmuteVideo');
 
     this.leaveMeeting = document.getElementById('leaveMeeting');
+    this.showPaticipants = document.getElementById('showPaticipants');
 
     this.shareYourScreen=document.getElementById('shareScreen')
     this.stopShareScreen=document.getElementById('stopshareScreen')
 
+   
     this.room = sessionStorage.getItem('joinedId');
     this.mail = sessionStorage.getItem('loginmail');
     this.chat.chatHistory(this.room).subscribe(
@@ -113,11 +119,28 @@ export class ChatComponent implements OnInit {
             }
             if (this.isPublish !== 'false') {
               // audioConstraintsForMic
-              let audioConstraints = new Owt.Base.AudioTrackConstraints(
-                Owt.Base.AudioSourceInfo.MIC
-              );
+              let audioConstraints
+              let videoConstraints
+
+              // let audioId = sessionStorage.getItem('audio');
+              // let videoId = sessionStorage.getItem('video');
+          
+              // if(audioId){
+              //   audioConstraints = new Owt.Base.AudioTrackConstraints(
+              //     Owt.Base.AudioSourceInfo.audioId
+              //   );
+              // }else{
+              //   audioConstraints = new Owt.Base.AudioTrackConstraints(
+              //     Owt.Base.AudioSourceInfo.MIC
+              //   );
+              // }
+             
+              audioConstraints = new Owt.Base.AudioTrackConstraints(
+                    Owt.Base.AudioSourceInfo.MIC
+                  );
+
               // videoConstraintsForCamera
-              let videoConstraints = new Owt.Base.VideoTrackConstraints(
+              videoConstraints = new Owt.Base.VideoTrackConstraints(
                 Owt.Base.VideoSourceInfo.CAMERA
               );
               if (this.shareScreen) {
@@ -131,7 +154,7 @@ export class ChatComponent implements OnInit {
                 );
               }
 
-              let mediaStream;
+             
               Owt.Base.MediaStreamFactory.createMediaStream(
                 new Owt.Base.StreamConstraints(
                   audioConstraints,
@@ -156,9 +179,9 @@ export class ChatComponent implements OnInit {
                       ],
                     };
                   }
-                  mediaStream = stream;
+                  this.mediaStream = stream;
                   this.localStream = new Owt.Base.LocalStream(
-                    mediaStream,
+                    this.mediaStream,
                     new Owt.Base.StreamSourceInfo('mic', 'camera')
                   );
                   // this.video.srcObject = stream;
@@ -173,11 +196,14 @@ export class ChatComponent implements OnInit {
                         .mixStream(myRoom, publication.id, 'common')
                         .subscribe(
                           (data) => {
+                            $(`#loading`).remove();
                             this.streamId = data.id;
-                            this.muteAudioButton.style.display = 'block';
-                            this.muteVideoButton.style.display = 'block';
-                            this.leaveMeeting.style.display = 'block';
-                            this.shareYourScreen.style.display = 'block';
+                            this.muteAudioButton.style.display = 'inline-block';
+                            this.muteVideoButton.style.display = 'inline-block';
+                            this.leaveMeeting.style.display = 'inline-block';
+                            this.shareYourScreen.style.display = 'inline-block';
+                            this.showChat.style.display = 'inline-block';
+                            this.showPaticipants.style.display='inline-block'
 
                           },
                           (err) => {
@@ -193,7 +219,7 @@ export class ChatComponent implements OnInit {
                         publication.mute('audio').then((response: any) => {
                           this.audio = 'off';
                           this.muteAudioButton.style.display = 'none';
-                          this.unmuteAudioButton.style.display = 'block';
+                          this.unmuteAudioButton.style.display = 'inline-block';
                         });
                       });
 
@@ -201,7 +227,7 @@ export class ChatComponent implements OnInit {
                         publication.mute('video').then((response: any) => {
                           this.videos = 'off';
                           this.muteVideoButton.style.display = 'none';
-                          this.unmuteVideoButton.style.display = 'block';
+                          this.unmuteVideoButton.style.display = 'inline-block';
                         });
                       });
 
@@ -209,15 +235,16 @@ export class ChatComponent implements OnInit {
                         publication.unmute('video').then((response: any) => {
                           this.videos = 'off';
                           this.unmuteVideoButton.style.display = 'none';
-                          this.muteVideoButton.style.display = 'block';
+                          this.muteVideoButton.style.display = 'inline-block';
                         });
+  
                       });
 
                       this.unmuteAudioButton.addEventListener('click', () => {
                         publication.unmute('audio').then((response: any) => {
                           this.audio = 'off';
                           this.unmuteAudioButton.style.display = 'none';
-                          this.muteAudioButton.style.display = 'block';
+                          this.muteAudioButton.style.display = 'inline-block';
                         });
                       });
 
@@ -247,6 +274,7 @@ export class ChatComponent implements OnInit {
                             .subscribe(() => {});
                           event.stream.addEventListener('ended', () => {
                             console.log(event.stream.id + ' is ended.');
+                            this.getParticipant()
                           });
                         }
                       );
@@ -260,6 +288,14 @@ export class ChatComponent implements OnInit {
                 this.getParticipant();
                 console.log(event);
               });
+              this.conference.addEventListener('participantjoined', (event: any) => {
+                
+                console.log("paticipant joined console",event);
+              });
+
+              this.showPaticipants.addEventListener('click',(evenet:any)=>{
+                this.getParticipant()
+              })
             }
             console.log('RSPONSE', resp);
 
@@ -338,13 +374,14 @@ export class ChatComponent implements OnInit {
         console.log('stream:', stream);
         this.videospace = document.getElementById('videospace');
         let $video = $(
-          `<video autoplay id=${stream.id}  style="display:block" >this browser does not supported video tag</video>`
+          `<video autoplay id=${stream.id}  style="display:inline-block; " >this browser does not supported video tag</video>`
         );
         $video.get(0).srcObject = stream.mediaStream;
         $('p').append($video);
 
         subscription.addEventListener('mute', (event: any) => {
           console.log(event);
+          this.getParticipant()
         });
 
         stream.addEventListener('ended', () => {
@@ -359,12 +396,14 @@ export class ChatComponent implements OnInit {
   }
 
 
+
   
 
   getParticipant() {
     this.meet.getPaticipants(this.room).subscribe(
       (data: any) => {
-
+        console.log("participants",data);
+        
         this.participants = data;
 
       },
@@ -373,13 +412,15 @@ export class ChatComponent implements OnInit {
       }
     );
   }
+  
 
   removeUi(id: any) {
     $(`#${id}`).remove();
   }
   screenstreamId:any
+  screenMediaStream:any
   shareScreenFunc(){
-    this.stopShareScreen.style.display = 'block';
+    this.stopShareScreen.style.display = 'inline-block';
     this.shareYourScreen.style.display = 'none';
         let audioConstraints = new Owt.Base.AudioTrackConstraints(
           Owt.Base.AudioSourceInfo.SCREENCAST
@@ -396,10 +437,10 @@ export class ChatComponent implements OnInit {
           )
         ).then(
           (stream: any) => {
-            let mediaStream=stream
+            this.screenMediaStream=stream
             console.log(stream);
             this.localStream = new Owt.Base.LocalStream(
-              mediaStream,
+              this.screenMediaStream,
               new Owt.Base.StreamSourceInfo('screen-cast', 'screen-cast')
             );
            let publishOption = {
@@ -437,7 +478,13 @@ export class ChatComponent implements OnInit {
                               publication.stop().then((response: any) => {
             
                                 this.stopShareScreen.style.display = 'none';
-                                this.shareYourScreen.style.display = 'block';
+                                this.shareYourScreen.style.display = 'inline-block';
+                                this.screenMediaStream.getTracks().forEach((track:any) => { 
+       
+                                  track.stop();
+                              });
+
+
                               });
                             });
 
@@ -445,5 +492,26 @@ export class ChatComponent implements OnInit {
           })
   }
 
+
+
+  ngOnDestroy() {
+    this.conference
+                .leave()
+                .then((response: any) => {
+                  console.log(response);
+                  this.mediaStream.getTracks().forEach((track:any) => { 
+       
+                    track.stop();
+                });
+
+                  alert('you left the meeting');
+                  this.router.navigate(['/']);
+                })
+                .catch((err: any) => {
+                  console.log(err);
+                });
+    
+    
+  }
 
 }

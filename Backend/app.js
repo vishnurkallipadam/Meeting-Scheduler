@@ -50,6 +50,7 @@ app.post("/createMeet", verifyUserToken, (req, res) => {
     name: req.body.data.meet,
     description: req.body.data.description,
     date: req.body.data.date,
+    meetId:req.body.data.meetid
   };
   var meetdata = new meetData(data);
   meetdata
@@ -121,7 +122,7 @@ app.post("/login", (req, res) => {
       bcrypt.compare(req.body.data.password, user.password).then((response) => {
         if (response) {
           console.log("user");
-          let payload = { subject: req.body.data.email + user.password };
+          let payload = { subject: user.name + user.password };
           let token = jwt.sign(payload, process.env.JWTTOKEN);
           res.status(200).send({ success: true, user: user, token: token });
 

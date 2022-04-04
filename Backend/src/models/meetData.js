@@ -7,7 +7,8 @@ const schema = mongoose.Schema;
 const meetSchema= new schema({
     name: String,
     description: String,
-    date:String
+    date:String,
+    meetId:String
 });
 
 // model

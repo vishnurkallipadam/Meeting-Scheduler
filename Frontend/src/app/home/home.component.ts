@@ -32,17 +32,34 @@ export class HomeComponent implements OnInit {
   }
 
   addMeet(){
-    console.log(this.data);
-    this.meetService.addMeet(this.data).subscribe(
-      data=>{
-        console.log("Meet Created");
-        this.ngOnInit()
-      },
-      err=>{
-        alert("something happened wrong!! TRy Again")
-        this.ngOnInit()
+
+    this.meetService.createRoom(this.data.meet)
+    .subscribe((data:any)=>{
+data=JSON.parse(data)
+let details={
+        meet:this.data.meet,
+        description:this.data.description,
+        date:this.data.date,
+        meetid:data._id
       }
+      this.meetService.addMeet(details).subscribe(
+        data=>{
+          console.log("Meet Created");
+          this.ngOnInit()
+        },
+        err=>{
+          alert("something happened wrong!! TRy Again")
+          this.ngOnInit()
+        }
+      )
+      
+    },
+    err=>{
+      alert("something happened wrong!! TRy Again")
+      this.ngOnInit()
+    }
     )
+
   }
 
   joinMeet(data:any){

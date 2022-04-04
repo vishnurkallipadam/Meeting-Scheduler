@@ -153,11 +153,9 @@ export class MeetComponent implements OnInit {
   
 
   changeVideoResolution(height:any,width:any){
-    let resolution={
-      height:height,
-      width:width
-    }
-    sessionStorage.setItem('resolution',resolution.toString())
+    sessionStorage.setItem('height',height)
+    sessionStorage.setItem('width',width)
+
     this.stream.getTracks().forEach((track:any) => {
       if(track.kind=='video'){
         track.applyConstraints({

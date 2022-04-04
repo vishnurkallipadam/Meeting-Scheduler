@@ -15,6 +15,53 @@ export class MeetService {
 
   constructor(private http:HttpClient) { }
   
+  createRoom(name:any){
+    let body={
+    
+      "name": name,
+      "options": {
+        "roles": [
+          {
+            "subscribe": {
+              "video": true,
+              "audio": true
+            },
+            "publish": {
+              "video": true,
+              "audio": true
+            },
+            "role": "presenter"
+          },
+          {
+            "subscribe": {
+              "video": true,
+              "audio": true
+            },
+            "publish": {
+              "video": true,
+              "audio": true
+            },
+            "role": "participant"
+          },
+          {
+            "subscribe": {
+              "video": true,
+              "audio": true
+            },
+            "publish": {
+              "video": false,
+              "audio": false
+            },
+            "role": "moderator"
+          }
+        ],
+        "views": []
+      }
+    }
+    return this.http.post<any>(`${environment.myHost}/createRoom`,body,{responseType: 'text' as 'json'})
+
+  }
+
   addMeet(data:any){
     console.log(data);
     return this.http.post<any>(`${environment.url}/createMeet`,{data})
