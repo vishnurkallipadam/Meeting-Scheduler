@@ -181,7 +181,6 @@ export class MeetComponent implements OnInit {
           track.stop();
       });
   }
-  conference:any
 
 
 }

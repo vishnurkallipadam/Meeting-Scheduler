@@ -8,7 +8,8 @@ import { environment } from 'src/environments/environment';
 export class MeetService {
 
     //mixed stream
-  roomId:any='623abb207ac3cc04053b83fd' //mixed stream
+  roomId:any='624ab07e7ac3cc04053b8b31' //mixed stream
+  
 
   // roomId:any='623d87a78f747a0407f8587b' //single and surrounded
   // roomId:any='623c5ca5d4b369040abbca99'
@@ -54,8 +55,7 @@ export class MeetService {
             },
             "role": "moderator"
           }
-        ],
-        "views": []
+        ]
       }
     }
     return this.http.post<any>(`${environment.myHost}/createRoom`,body,{responseType: 'text' as 'json'})
@@ -79,7 +79,7 @@ export class MeetService {
 
   createToken(room:any, user:any, role:any ){
     var body = {
-      room: this.roomId,
+      room: room,
       username: user,
       role: role
   };
@@ -88,7 +88,7 @@ export class MeetService {
 
   mixStream(room:any, stream:any, view:any){
     
-    let rooms=this.roomId
+    let rooms=room
   var jsonPatch = [{
       op: 'add',
       path: '/info/inViews',
@@ -98,11 +98,11 @@ export class MeetService {
   }
 
   getPaticipants(roomId:any){
-    return this.http.get<any>(` ${environment.myHost}/rooms/${this.roomId}/participants`)
+    return this.http.get<any>(` ${environment.myHost}/rooms/${roomId}/participants`)
   }
   startStreamingIn(room:any, inUrl:any){
 
-    let rooms=this.roomId
+    let rooms=room
       var options = {
           url: environment.url,
           media: {

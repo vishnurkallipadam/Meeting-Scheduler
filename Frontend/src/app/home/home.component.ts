@@ -63,8 +63,8 @@ let details={
   }
 
   joinMeet(data:any){
-    this.router.navigate(['/meet/'+data._id])
-    sessionStorage.setItem('joinedId',data._id)
+    this.router.navigate(['/meet/'+data.meetId])
+    sessionStorage.setItem('joinedId',data.meetId)
 
   }
 

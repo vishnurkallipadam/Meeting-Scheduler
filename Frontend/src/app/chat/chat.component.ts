@@ -108,7 +108,7 @@ export class ChatComponent implements OnInit {
             let myRoom = resp.id;
             // this.mediaUrl="localhost"
             if (this.mediaUrl) {
-              this.meet.startStreamingIn(myRoom, this.mediaUrl).subscribe(
+              this.meet.startStreamingIn(this.room, this.mediaUrl).subscribe(
                 (data) => {
                   console.log(data);
                 },
@@ -193,7 +193,7 @@ export class ChatComponent implements OnInit {
                       this.streamId = publication.id;
 
                       this.meet
-                        .mixStream(myRoom, publication.id, 'common')
+                        .mixStream(this.room, publication.id, 'common')
                         .subscribe(
                           (data) => {
                             $(`#loading`).remove();
@@ -270,7 +270,7 @@ export class ChatComponent implements OnInit {
                             isSelf &&
                             this.subscribeAndRenderVideo(event.stream);
                           this.meet
-                            .mixStream(myRoom, event.stream.id, 'common')
+                            .mixStream(this.room, event.stream.id, 'common')
                             .subscribe(() => {});
                           event.stream.addEventListener('ended', () => {
                             console.log(event.stream.id + ' is ended.');
@@ -304,6 +304,9 @@ export class ChatComponent implements OnInit {
                 .leave()
                 .then((response: any) => {
                   console.log(response);
+                  this.mediaStream.getTracks().forEach((track:any) => { 
+                    track.stop();
+                });
 
                   alert('you left the meeting');
                   this.router.navigate(['/']);
