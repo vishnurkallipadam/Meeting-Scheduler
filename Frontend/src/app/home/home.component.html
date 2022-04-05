@@ -13,7 +13,7 @@
                 <span><label for=""><h6>Description:</h6> </label>{{task.description}}</span><br>
                 <span><label for=""><h6>Date:</h6> </label>{{task.date}}</span><br>
 
-                <h6>http://localhost:4200/meet/<input type="text" disabled value="{{task._id}}" id="myInput"></h6><br>
+                <h6>http://localhost:4200/meet/<input type="text" disabled value="{{task.meetId}}" id="myInput"></h6><br>
                 <a  class="btn btn-primary" (click)="joinMeet(task)">JOIN</a>
 
            

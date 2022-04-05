@@ -100,6 +100,11 @@ export class MeetService {
   getPaticipants(roomId:any){
     return this.http.get<any>(` ${environment.myHost}/rooms/${roomId}/participants`)
   }
+
+  getStreams(roomId:any){
+    return this.http.get<any>(` ${environment.myHost}/rooms/${roomId}/streams`)
+  }
+
   startStreamingIn(room:any, inUrl:any){
 
     let rooms=room
