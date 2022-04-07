@@ -1,0 +1,129 @@
+<ul class="nav justify-content-center">
+
+    <div id="loading" style="z-index: 1000; margin: 0;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      -ms-transform: translateY(-50%);
+      transform: translateY(-50%);" >
+        <div class="d-flex justify-content-center ">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      </div>
+
+    <li class="nav-item">
+        <button id="shareScreen" (click)="shareScreen()" style="display: none;" class="button btn btn-primary"><svg
+                xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cast"
+                viewBox="0 0 16 16">
+                <path
+                    d="m7.646 9.354-3.792 3.792a.5.5 0 0 0 .353.854h7.586a.5.5 0 0 0 .354-.854L8.354 9.354a.5.5 0 0 0-.708 0z" />
+                <path
+                    d="M11.414 11H14.5a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.5-.5h-13a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .5.5h3.086l-1 1H1.5A1.5 1.5 0 0 1 0 10.5v-7A1.5 1.5 0 0 1 1.5 2h13A1.5 1.5 0 0 1 16 3.5v7a1.5 1.5 0 0 1-1.5 1.5h-2.086l-1-1z" />
+            </svg></button>
+        <button id="stopShareScreen" style="display: none;" class="button btn btn-danger"><svg
+                xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-slash-square"
+                viewBox="0 0 16 16">
+                <path
+                    d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+                <path d="M11.354 4.646a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708l6-6a.5.5 0 0 1 .708 0z" />
+            </svg></button>
+
+    </li>
+    <li class="nav-item">
+        <button id="muteAudio" style="display: none;" class="button btn btn-primary"><svg
+                xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-mic-fill"
+                viewBox="0 0 16 16">
+                <path d="M5 3a3 3 0 0 1 6 0v5a3 3 0 0 1-6 0V3z" />
+                <path
+                    d="M3.5 6.5A.5.5 0 0 1 4 7v1a4 4 0 0 0 8 0V7a.5.5 0 0 1 1 0v1a5 5 0 0 1-4.5 4.975V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 .5-.5z" />
+            </svg></button>
+        <button id="unmuteAudio" style="display: none;" class="button btn btn-danger"><svg
+                xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                class="bi bi-mic-mute-fill" viewBox="0 0 16 16">
+                <path
+                    d="M13 8c0 .564-.094 1.107-.266 1.613l-.814-.814A4.02 4.02 0 0 0 12 8V7a.5.5 0 0 1 1 0v1zm-5 4c.818 0 1.578-.245 2.212-.667l.718.719a4.973 4.973 0 0 1-2.43.923V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 1 0v1a4 4 0 0 0 4 4zm3-9v4.879L5.158 2.037A3.001 3.001 0 0 1 11 3z" />
+                <path d="M9.486 10.607 5 6.12V8a3 3 0 0 0 4.486 2.607zm-7.84-9.253 12 12 .708-.708-12-12-.708.708z" />
+            </svg></button>
+    </li>
+    <li class="nav-item">
+        <button id="leaveMeeting" style="display: none;" class="button btn btn-danger">Leave</button>
+    </li>
+
+    <li class="nav-item">
+        <button id="muteVideo" style="display: none;" class="button btn btn-primary"><svg
+                xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                class="bi bi-camera-video-fill" viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                    d="M0 5a2 2 0 0 1 2-2h7.5a2 2 0 0 1 1.983 1.738l3.11-1.382A1 1 0 0 1 16 4.269v7.462a1 1 0 0 1-1.406.913l-3.111-1.382A2 2 0 0 1 9.5 13H2a2 2 0 0 1-2-2V5z" />
+            </svg></button>
+        <button id="unmuteVideo" style="display: none;" class="button btn btn-danger"><svg
+                xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                class="bi bi-camera-video-off-fill" viewBo
+                x="0 0 16 16">
+                <path fill-rule="evenodd"
+                    d="M10.961 12.365a1.99 1.99 0 0 0 .522-1.103l3.11 1.382A1 1 0 0 0 16 11.731V4.269a1 1 0 0 0-1.406-.913l-3.111 1.382A2 2 0 0 0 9.5 3H4.272l6.69 9.365zm-10.114-9A2.001 2.001 0 0 0 0 5v6a2 2 0 0 0 2 2h5.728L.847 3.366zm9.746 11.925-10-14 .814-.58 10 14-.814.58z" />
+            </svg></button>
+    </li>
+
+</ul>
+
+<!-- <button (click)="join()">JOIN</button>
+<button (click)="publish()">PUBLISH</button>
+ -->
+
+
+
+
+<!-- <video src="" autoplay muted #myvideotag></video>
+<video src="" autoplay muted #myvideotag2></video> -->
+
+
+<div class="container">
+    <div class="row">
+        <div class="col md-4" *ngFor="let stream of streams">
+            <div *ngIf="stream.attributes.type=='screen-share'">
+                <div style="height: 100%;width: 100%;" id="carouselExampleSlidesOnly" class="carousel slide"
+                    data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <video [srcObject]="stream.mediaStream" autoplay muted></video>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div *ngIf="stream.attributes.type=='cam'" class="card" style="width: 18rem;">
+                <div class="img" *ngIf="stream.videoMuted">
+                    <h5 style=" margin-top: 20%;">{{stream.attributes.name}}</h5>
+                </div>
+                <video *ngIf="!stream.videoMuted" [srcObject]="stream.mediaStream" class="card-img-top" autoplay
+                    muted></video>
+                <div class="card-body">
+                    <div class="card-body">
+                        <h6 class="card-title">{{stream.attributes.name}} (Self You)</h6>
+                        <span *ngIf="stream.audioMuted" style="margin: 2mm;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-mic-mute-fill" viewBox="0 0 16 16">
+                                <path
+                                    d="M13 8c0 .564-.094 1.107-.266 1.613l-.814-.814A4.02 4.02 0 0 0 12 8V7a.5.5 0 0 1 1 0v1zm-5 4c.818 0 1.578-.245 2.212-.667l.718.719a4.973 4.973 0 0 1-2.43.923V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 1 0v1a4 4 0 0 0 4 4zm3-9v4.879L5.158 2.037A3.001 3.001 0 0 1 11 3z" />
+                                <path
+                                    d="M9.486 10.607 5 6.12V8a3 3 0 0 0 4.486 2.607zm-7.84-9.253 12 12 .708-.708-12-12-.708.708z" />
+                            </svg>
+                        </span>
+                        <span *ngIf="stream.videoMuted" style="margin: 2mm;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-camera-video-off-fill" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                    d="M10.961 12.365a1.99 1.99 0 0 0 .522-1.103l3.11 1.382A1 1 0 0 0 16 11.731V4.269a1 1 0 0 0-1.406-.913l-3.111 1.382A2 2 0 0 0 9.5 3H4.272l6.69 9.365zm-10.114-9A2.001 2.001 0 0 0 0 5v6a2 2 0 0 0 2 2h5.728L.847 3.366zm9.746 11.925-10-14 .814-.58 10 14-.814.58z" />
+                            </svg>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>

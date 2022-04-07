@@ -172,7 +172,7 @@ export class MeetComponent implements OnInit {
     console.log(this.joined);
     this.joined="on"
     console.log(this.joined);
-    this.router.navigate(['/joinedmeet'])
+    this.router.navigate(['/test'])
   }
   
   ngOnDestroy() {

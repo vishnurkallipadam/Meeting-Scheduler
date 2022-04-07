@@ -5,6 +5,7 @@ import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { MeetComponent } from './meet/meet.component';
 import { SignupComponent } from './signup/signup.component';
+import { TestComponent } from './test/test.component';
 import { UserguardGuard } from './userguard.guard';
 
 const routes: Routes = [
@@ -35,6 +36,11 @@ const routes: Routes = [
     path:'joinedmeet',
     component:ChatComponent,
     canActivate:[UserguardGuard]
+  },
+  {
+    path:'test',
+    component:TestComponent
+
   }
 ];
 

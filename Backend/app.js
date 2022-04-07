@@ -122,7 +122,7 @@ app.post("/login", (req, res) => {
       bcrypt.compare(req.body.data.password, user.password).then((response) => {
         if (response) {
           console.log("user");
-          let payload = { subject: user.name + user.password };
+          let payload = { subject: user.name};
           let token = jwt.sign(payload, process.env.JWTTOKEN);
           res.status(200).send({ success: true, user: user, token: token });
 

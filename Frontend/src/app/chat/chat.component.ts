@@ -247,34 +247,34 @@ export class ChatComponent implements OnInit {
                       this.conference.addEventListener(
                         'streamadded',
                         (event: any) => {
-                          this.getParticipant();
-                          console.log(event);
-                          // if(event.stream.source.video=='screen-cast'){
-                            // this.subscribeForward=true
+                          // this.getParticipant();
+                          // console.log(event);
+                          // // if(event.stream.source.video=='screen-cast'){
+                          // //   this.subscribeForward=true
 
+                          // // }
+                          // if (event.stream.id !== this.streamId) {
+                          //   console.log(this.streamId);
+
+                          //   console.log(
+                          //     'A new stream is added ',
+                          //     event.stream.id
+                          //   );
                           // }
-                          if (event.stream.id !== this.streamId) {
-                            console.log(this.streamId);
-
-                            console.log(
-                              'A new stream is added ',
-                              event.stream.id
-                            );
-                          }
-                          let isSelf = this.streamId;
-                          isSelf = isSelf
-                            ? isSelf
-                            : event.stream.id != this.publicationGlobal.id;
-                          this.subscribeForward &&
-                            isSelf &&
-                            this.subscribeAndRenderVideo(event.stream);
-                          this.meet
-                            .mixStream(this.room, event.stream.id, 'common')
-                            .subscribe(() => {});
-                          event.stream.addEventListener('ended', () => {
-                            console.log(event.stream.id + ' is ended.');
-                            this.getParticipant();
-                          });
+                          // let isSelf = this.streamId;
+                          // isSelf = isSelf
+                          //   ? isSelf
+                          //   : event.stream.id != this.publicationGlobal.id;
+                          // this.subscribeForward &&
+                          //   isSelf &&
+                          //   this.subscribeAndRenderVideo(event.stream);
+                          // this.meet
+                          //   .mixStream(this.room, event.stream.id, 'common')
+                          //   .subscribe(() => {});
+                          // event.stream.addEventListener('ended', () => {
+                          //   console.log(event.stream.id + ' is ended.');
+                          //   this.getParticipant();
+                          // });
                         }
                       );
                     });
@@ -418,8 +418,6 @@ export class ChatComponent implements OnInit {
   screenstreamId: any;
   screenMediaStream: any;
   shareScreenFunc() {
-    this.stopShareScreen.style.display = 'inline-block';
-    this.shareYourScreen.style.display = 'none';
     let audioConstraints = new Owt.Base.AudioTrackConstraints(
       Owt.Base.AudioSourceInfo.SCREENCAST
     );
@@ -447,6 +445,7 @@ export class ChatComponent implements OnInit {
             rid: 'h',
             active: true /*, scaleResolutionDownBy: 2.0*/,
           },
+          
           { rid: 'f', active: true },
         ],
       };
@@ -454,6 +453,8 @@ export class ChatComponent implements OnInit {
         .publish(this.localStream, publishOption)
         .then((publication: any) => {
           console.log("screencast");
+          this.stopShareScreen.style.display = 'inline-block';
+          this.shareYourScreen.style.display = 'none';
           
           this.publicationGlobal = publication;
           console.log('publication', publication);

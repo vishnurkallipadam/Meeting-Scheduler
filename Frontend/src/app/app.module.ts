@@ -16,6 +16,8 @@ import { ChatService } from './chat.service';
 import { MeetService } from './meet.service';
 import { UserguardGuard } from './userguard.guard';
 import { TokenInterceptorService } from './token-interceptor.service';
+import { TestComponent } from './test/test.component';
+import { AddSrcDirective } from './directives/add-src.directive';
 
 @NgModule({
   declarations: [
@@ -26,6 +28,8 @@ import { TokenInterceptorService } from './token-interceptor.service';
     LoginComponent,
     MeetComponent,
     ChatComponent,
+    TestComponent,
+    AddSrcDirective,
     
   ],
   imports: [
