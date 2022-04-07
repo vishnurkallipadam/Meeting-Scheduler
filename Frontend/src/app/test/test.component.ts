@@ -32,6 +32,8 @@ export class TestComponent implements OnInit {
   shareScreenBtn: any;
   stopShareScreen: any;
   leaveMeeting: any;
+  chatBtn:any
+  username:any
 
   ngOnInit(): void {
     this.muteAudioButton = document.getElementById('muteAudio');
@@ -41,9 +43,12 @@ export class TestComponent implements OnInit {
     this.shareScreenBtn = document.getElementById('shareScreen');
     this.stopShareScreen = document.getElementById('stopShareScreen');
     this.leaveMeeting = document.getElementById('leaveMeeting');
+    this.chatBtn = document.getElementById('chat')
 
     this.conference = new Owt.Conference.ConferenceClient();
     this.room = sessionStorage.getItem('joinedId');
+    this.username = sessionStorage.getItem('username');
+
     this.join();
     this.conference.addEventListener('streamadded', (event: any) => {
       console.log('added', event);
@@ -70,12 +75,12 @@ export class TestComponent implements OnInit {
       this.conference
         .leave()
         .then((response: any) => {
-          console.log(response);
-          alert('you left the meeting');
-          this.router.navigate(['/']);
           this.mediaStream.getTracks().forEach((track: any) => {
             track.stop();
           });
+          console.log(response);
+          alert('you left the meeting');
+          this.router.navigate(['/']);
         })
         .catch((err: any) => {
           console.log(err);
@@ -118,11 +123,12 @@ export class TestComponent implements OnInit {
     Owt.Base.MediaStreamFactory.createMediaStream(
       new Owt.Base.StreamConstraints(audioConstraints, videoConstraints)
     ).then((stream: any) => {
+      this.mediaStream=stream
       let localStream = new Owt.Base.LocalStream(
         stream,
         new Owt.Base.StreamSourceInfo('mic', 'camera'),
         {
-          name: 'Vishnu',
+          name: this.username,
           type: 'cam',
         }
       );
@@ -134,6 +140,8 @@ export class TestComponent implements OnInit {
         this.muteVideoButton.style.display = 'inline-block';
         this.shareScreenBtn.style.display = 'inline-block';
         this.leaveMeeting.style.display = 'inline-block';
+        this.chatBtn.style.display = 'inline-block';
+
 
         this.mixStream(publication.id);
         publication.addEventListener('error', (err: any) => {
@@ -203,6 +211,8 @@ export class TestComponent implements OnInit {
       });
 
       subscription.addEventListener('error', (event: any) => {
+        console.log(event);
+        
         let index = this.streams.findIndex((s: any) => s.id === stream.id);
         this.streams.splice(index, 1);
         console.log(this.streams);
@@ -233,7 +243,7 @@ export class TestComponent implements OnInit {
       Owt.Base.VideoSourceInfo.SCREENCAST
     );
     let attributes = {
-      name: 'Vishnu',
+      name: this.username,
       type: 'screen-share',
     };
     Owt.Base.MediaStreamFactory.createMediaStream(
