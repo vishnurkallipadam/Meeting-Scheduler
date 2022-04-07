@@ -22,6 +22,8 @@ export class TestComponent implements OnInit {
   mytag: any = false;
   streams: any = [];
   mediaStream: any;
+  screenMediaStream: any;
+
   muteAudioButton: any;
   muteVideoButton: any;
   unmuteAudioButton: any;
@@ -75,9 +77,18 @@ export class TestComponent implements OnInit {
       this.conference
         .leave()
         .then((response: any) => {
-          this.mediaStream.getTracks().forEach((track: any) => {
-            track.stop();
-          });
+          if(this.mediaStream){
+
+            this.mediaStream.getTracks().forEach((track: any) => {
+              track.stop();
+            });
+          }
+          if(this.screenMediaStream){
+            this.screenMediaStream.getTracks().forEach((track: any) => {
+              track.stop();
+            });
+          }
+
           console.log(response);
           alert('you left the meeting');
           this.router.navigate(['/']);
@@ -249,7 +260,7 @@ export class TestComponent implements OnInit {
     Owt.Base.MediaStreamFactory.createMediaStream(
       new Owt.Base.StreamConstraints(audioConstraints, videoConstraints)
     ).then((stream: any) => {
-      let mediaStream = stream;
+      this.screenMediaStream = stream;
       let localStream = new Owt.Base.LocalStream(
         stream,
         new Owt.Base.StreamSourceInfo('screen-cast', 'screen-cast'),
@@ -267,7 +278,7 @@ export class TestComponent implements OnInit {
           publication.stop().then((response: any) => {
             this.stopShareScreen.style.display = 'none';
             this.shareScreenBtn.style.display = 'inline-block';
-            mediaStream.getTracks().forEach((track: any) => {
+            this.screenMediaStream.getTracks().forEach((track: any) => {
               track.stop();
             });
           });
