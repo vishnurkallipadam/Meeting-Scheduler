@@ -1,17 +1,6 @@
-<ul class="nav justify-content-center">
+<ul class="nav fixed-bottom justify-content-center">
 
-    <div id="loading" style="z-index: 1000; margin: 0;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      -ms-transform: translateY(-50%);
-      transform: translateY(-50%);" >
-        <div class="d-flex justify-content-center ">
-          <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
-          </div>
-        </div>
-      </div>
+   
 
     <li class="nav-item">
         <button id="shareScreen" (click)="shareScreen()" style="display: none;" class="button btn btn-primary"><svg
@@ -80,8 +69,20 @@
 <video src="" autoplay muted #myvideotag2></video> -->
 
 
-<div class="container">
+<div class="container" style="margin-top: 20mm;">
     <div class="row">
+        <div id="loading" style="z-index: 1000; margin: 0;
+        position: absolute;
+        top: 50%;
+        left: -1%;
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);" >
+          <div class="d-flex justify-content-center ">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        </div>
         <div class="col md-4" *ngFor="let stream of streams">
             <div *ngIf="stream.attributes.type=='screen-share'">
                 <div style="height: 100%;width: 100%;" id="carouselExampleSlidesOnly" class="carousel slide"
