@@ -12,13 +12,15 @@
                 <span><label for=""><h6>Name:</h6> </label>{{task.name}}</span><br>
                 <span><label for=""><h6>Description:</h6> </label>{{task.description}}</span><br>
                 <span><label for=""><h6>Date:</h6> </label>{{task.date}}</span><br>
+                <span><label for=""><h6>Created By:</h6> </label>{{task.owner}}</span><br>
+
 
                 <h6>http://localhost:4200/meet/<input type="text" disabled value="{{task.meetId}}" id="myInput"></h6><br>
                 <a  class="btn btn-primary" (click)="joinMeet(task)">JOIN</a>
 
            
-                <button class="btn btn-warning " >UPDATE</button>
-                <button class="btn btn-danger " (click)="deleteMeet(task)" >DELETE</button>
+            
+                <button *ngIf="task.owner==email" class="btn btn-danger " (click)="deleteMeet(task)" >DELETE</button>
 
 
             </li>

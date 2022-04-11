@@ -5,6 +5,7 @@ var cors = require("cors");
 var path = require("path");
 const jwt = require("jsonwebtoken");
 const helmet = require("helmet");
+const redisClient = require("./lib/datastore");
 
 const mongoose = require("mongoose");
 mongoose.connect(process.env.DBURL);
@@ -50,18 +51,151 @@ app.post("/createMeet", verifyUserToken, (req, res) => {
     name: req.body.data.meet,
     description: req.body.data.description,
     date: req.body.data.date,
-    meetId:req.body.data.meetid
+    meetId: req.body.data.meetid,
+    owner: req.body.data.owner,
   };
   var meetdata = new meetData(data);
   meetdata
     .save()
-    .then(() => {
-      res.send({ success: true });
+    .then(async () => {
+      let data = {
+        audioMute: [],
+        videoMute: [],
+        screenShare: false,
+        streaming: true,
+      };
+      try {
+        let response = await redisClient.HSET(
+          "Conference",
+          req.body.data.meetid,
+          JSON.stringify(data)
+        );
+        res.send({ success: true });
+      } catch (e) {
+        res.send({ success: false, message: e.message });
+      }
     })
     .catch((e) => {
       res.send({ success: false, message: e.message });
     });
 });
+
+
+app.post('/muteAudio', async function (req, res, next) {
+  try {
+    let { body } = req
+    console.log("body", body)
+    let response = await redisClient.HGET('Conference', body.data.roomId);
+    response=JSON.parse(response)
+    console.log(response);
+    response.audioMute.push(body.data.user)
+    try{
+      let data = await redisClient.HSET('Conference', body.data.roomId, JSON.stringify(response));
+      console.log(data);
+      res.json(response)
+
+    }
+    catch(e){
+      console.log(e)
+    }
+    
+  }
+  catch (e) {
+    console.log(e)
+  }
+});
+
+app.post('/unmuteAudio', async function (req, res, next) {
+  try {
+    let { body } = req
+    console.log("body", body)
+    let response = await redisClient.HGET('Conference', body.data.roomId);
+    response=JSON.parse(response)
+    console.log(response);
+    let index = response.audioMute.indexOf(body.data.user);
+    response.audioMute.splice(index, 1);
+    try{
+      let data = await redisClient.HSET('Conference', body.data.roomId, JSON.stringify(response));
+      console.log(data);
+      res.json(response)
+
+    }
+    catch(e){
+      console.log(e)
+    }
+    
+  }
+  catch (e) {
+    console.log(e)
+  }
+});
+
+
+app.post('/muteVideo', async function (req, res, next) {
+  try {
+    let { body } = req
+    console.log("body", body)
+    let response = await redisClient.HGET('Conference', body.data.roomId);
+    response=JSON.parse(response)
+    console.log(response);
+    response.videoMute.push(body.data.user)
+    try{
+      let data = await redisClient.HSET('Conference', body.data.roomId, JSON.stringify(response));
+      console.log(data);
+      res.json(response)
+
+    }
+    catch(e){
+      console.log(e)
+    }
+    
+  }
+  catch (e) {
+    console.log(e)
+  }
+});
+
+
+app.post('/unmuteVideo', async function (req, res, next) {
+  try {
+    let { body } = req
+    console.log("body", body)
+    let response = await redisClient.HGET('Conference', body.data.roomId);
+    response=JSON.parse(response)
+    console.log(response);
+    let index = response.videoMute.indexOf(body.data.user);
+    response.videoMute.splice(index, 1);
+    try{
+      let data = await redisClient.HSET('Conference', body.data.roomId, JSON.stringify(response));
+      console.log(data);
+      res.json(response)
+
+    }
+    catch(e){
+      console.log(e)
+    }
+    
+  }
+  catch (e) {
+    console.log(e)
+  }
+});
+
+
+app.get('/meetStatus/:id', async function (req, res, next) {
+  try {
+    let { params } = req
+    let response = await redisClient.HGET('Conference', params.id);
+    res.send(response)
+
+  }
+  catch (e) {
+    console.log(e)
+  }
+});
+
+
+
 
 app.get("/getMeet", verifyUserToken, (req, res) => {
   meetData
@@ -114,6 +248,29 @@ app.post("/register", async (req, res) => {
   });
 });
 
+app.post("/create-meeting", async function (req, res, next) {
+  res.send("respond with a resource");
+  let { body } = req;
+  console.log("body", body);
+
+  let data = {
+    audioMute: [],
+    videoMute: [],
+    screenShare: false,
+    streaming: true,
+  };
+  try {
+    let response = await redisClient.HSET(
+      "Conference",
+      body.meetId,
+      JSON.stringify(data)
+    );
+    console.log(response);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
 app.post("/login", (req, res) => {
   console.log(req.body);
   userdata.findOne({ email: req.body.data.email }, (err, user) => {
@@ -122,7 +279,7 @@ app.post("/login", (req, res) => {
       bcrypt.compare(req.body.data.password, user.password).then((response) => {
         if (response) {
           console.log("user");
-          let payload = { subject: user.name};
+          let payload = { subject: user.name };
           let token = jwt.sign(payload, process.env.JWTTOKEN);
           res.status(200).send({ success: true, user: user, token: token });
 

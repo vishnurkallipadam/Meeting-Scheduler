@@ -1,7 +1,4 @@
 <ul class="nav fixed-bottom justify-content-center">
-
-
-
     <li class="nav-item">
         <button id="shareScreen" (click)="shareScreen()" style="display: none;"
             class="button btn btn-outline-primary"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -61,7 +58,7 @@
     </li>
 
     <li class="nav-item">
-        <button id="chat" style="display: none;" class="button btn btn-outline-primary"><svg
+        <button id="chat" data-bs-toggle="modal" data-bs-target="#myModal" style="display: none;" class="button btn btn-outline-primary"><svg
                 xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                 class="bi bi-chat-left-fill" viewBox="0 0 16 16">
                 <path
@@ -142,3 +139,31 @@
 
         </div>
     </div>
+
+
+    <!-- The Modal -->
+   <div class="modal" id="myModal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+  
+  
+  
+        <!-- Modal body -->
+        <div class="modal-body">
+          <button style="float: right;" type="button"  class="btn btn-danger" data-bs-dismiss="modal"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z"/>
+            <path fill-rule="evenodd" d="M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z"/>
+          </svg></button>
+          <app-chat></app-chat>
+          
+       
+        </div>
+  
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          
+        </div>
+  
+      </div>
+    </div>
+  </div>

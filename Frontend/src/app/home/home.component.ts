@@ -8,9 +8,9 @@ import { Router } from '@angular/router';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  meetArray:Array<{name:String,description:String,date:String,meetId:String}> = [];
+  meetArray:Array<{name:String,description:String,date:String,meetId:String,owner:String}> = [];
   constructor(private meetService:MeetService,private router:Router) { }
-
+email:any
   data={
     meet:'',
     description:'',
@@ -19,6 +19,8 @@ export class HomeComponent implements OnInit {
 
   currentDate:any=''
   ngOnInit(): void {
+    this.email = sessionStorage.getItem('loginmail');
+
     this.currentDate=new Date
     this.meetService.getMeet().subscribe(
       data=>{
@@ -40,7 +42,8 @@ let details={
         meet:this.data.meet,
         description:this.data.description,
         date:this.data.date,
-        meetid:data._id
+        meetid:data._id,
+        owner:this.email
       }
       this.meetService.addMeet(details).subscribe(
         data=>{

@@ -8,7 +8,8 @@ const meetSchema= new schema({
     name: String,
     description: String,
     date:String,
-    meetId:String
+    meetId:String,
+    owner:String
 });
 
 // model

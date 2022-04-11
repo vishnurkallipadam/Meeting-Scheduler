@@ -34,8 +34,10 @@ export class TestComponent implements OnInit {
   shareScreenBtn: any;
   stopShareScreen: any;
   leaveMeeting: any;
-  chatBtn:any
-  username:any
+  chatBtn: any;
+  username: any;
+  email:any
+  meetState:any={}
 
   ngOnInit(): void {
     this.muteAudioButton = document.getElementById('muteAudio');
@@ -45,11 +47,12 @@ export class TestComponent implements OnInit {
     this.shareScreenBtn = document.getElementById('shareScreen');
     this.stopShareScreen = document.getElementById('stopShareScreen');
     this.leaveMeeting = document.getElementById('leaveMeeting');
-    this.chatBtn = document.getElementById('chat')
+    this.chatBtn = document.getElementById('chat');
 
     this.conference = new Owt.Conference.ConferenceClient();
     this.room = sessionStorage.getItem('joinedId');
     this.username = sessionStorage.getItem('username');
+    this.email = sessionStorage.getItem('loginmail');
 
     this.join();
     this.conference.addEventListener('streamadded', (event: any) => {
@@ -77,13 +80,12 @@ export class TestComponent implements OnInit {
       this.conference
         .leave()
         .then((response: any) => {
-          if(this.mediaStream){
-
+          if (this.mediaStream) {
             this.mediaStream.getTracks().forEach((track: any) => {
               track.stop();
             });
           }
-          if(this.screenMediaStream){
+          if (this.screenMediaStream) {
             this.screenMediaStream.getTracks().forEach((track: any) => {
               track.stop();
             });
@@ -107,6 +109,11 @@ export class TestComponent implements OnInit {
         this.conference.join(data).then((resp: any) => {
           console.log('resp', resp);
           this.publish();
+          this.meet.getMeetState(this.room).subscribe((data:any)=>{
+            this.meetState=data
+            console.log(this.meetState);
+            
+          })
           for (let stream of resp.remoteStreams) {
             if (stream.source.audio !== 'mixed') {
               this.subscribeStream(stream, 'forward');
@@ -134,7 +141,7 @@ export class TestComponent implements OnInit {
     Owt.Base.MediaStreamFactory.createMediaStream(
       new Owt.Base.StreamConstraints(audioConstraints, videoConstraints)
     ).then((stream: any) => {
-      this.mediaStream=stream
+      this.mediaStream = stream;
       let localStream = new Owt.Base.LocalStream(
         stream,
         new Owt.Base.StreamSourceInfo('mic', 'camera'),
@@ -153,7 +160,6 @@ export class TestComponent implements OnInit {
         this.leaveMeeting.style.display = 'inline-block';
         this.chatBtn.style.display = 'inline-block';
 
-
         this.mixStream(publication.id);
         publication.addEventListener('error', (err: any) => {
           console.log('Publication error: ' + err.error.message);
@@ -163,6 +169,18 @@ export class TestComponent implements OnInit {
           publication.mute('audio').then((response: any) => {
             this.muteAudioButton.style.display = 'none';
             this.unmuteAudioButton.style.display = 'inline-block';
+            let data={
+              user:this.email,
+              roomId:this.room
+            }
+            this.meet.muteAudio(data)
+            .subscribe((data:any)=>{
+            },
+            (err:any)=>{
+              console.log(err);
+              
+            })
+
           });
         });
 
@@ -170,6 +188,17 @@ export class TestComponent implements OnInit {
           publication.mute('video').then((response: any) => {
             this.muteVideoButton.style.display = 'none';
             this.unmuteVideoButton.style.display = 'inline-block';
+            let data={
+              user:this.email,
+              roomId:this.room
+            }
+            this.meet.muteVideo(data)
+            .subscribe((data:any)=>{
+            },
+            (err:any)=>{
+              console.log(err);
+              
+            })
           });
         });
 
@@ -177,6 +206,17 @@ export class TestComponent implements OnInit {
           publication.unmute('video').then((response: any) => {
             this.unmuteVideoButton.style.display = 'none';
             this.muteVideoButton.style.display = 'inline-block';
+            let data={
+              user:this.email,
+              roomId:this.room
+            }
+            this.meet.unmuteVideo(data)
+            .subscribe((data:any)=>{
+            },
+            (err:any)=>{
+              console.log(err);
+              
+            })
           });
         });
 
@@ -184,6 +224,17 @@ export class TestComponent implements OnInit {
           publication.unmute('audio').then((response: any) => {
             this.unmuteAudioButton.style.display = 'none';
             this.muteAudioButton.style.display = 'inline-block';
+            let data={
+              user:this.email,
+              roomId:this.room
+            }
+            this.meet.unmuteAudio(data)
+            .subscribe((data:any)=>{
+            },
+            (err:any)=>{
+              console.log(err);
+              
+            })
           });
         });
       });
@@ -223,7 +274,7 @@ export class TestComponent implements OnInit {
 
       subscription.addEventListener('error', (event: any) => {
         console.log(event);
-        
+
         let index = this.streams.findIndex((s: any) => s.id === stream.id);
         this.streams.splice(index, 1);
         console.log(this.streams);
