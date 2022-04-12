@@ -20,14 +20,14 @@ let http = require("http");
 let https = require("https");
 let server
 if (process.env.USE_SSL === 'true') {
-    var options = {
-        pfx: fs.readFileSync('/root/certificate.pfx'),
-        passphrase: 'sample'
-    };
-    server = https.createServer(options, app)
+  var options = {
+      key: fs.readFileSync(process.env.key),
+      cert: fs.readFileSync(process.env.cert),
+  };
+  server = https.createServer(options, app)
 }
 else {
-    server = http.createServer(app);
+  server = http.createServer(app);
 }
 
 let socketIO = require("socket.io");
