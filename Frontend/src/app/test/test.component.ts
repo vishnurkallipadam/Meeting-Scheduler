@@ -40,6 +40,7 @@ export class TestComponent implements OnInit {
   meetState: any = {};
   now: any;
   date: any;
+  chatclose: any;
   ngOnInit(): void {
     this.muteAudioButton = document.getElementById('muteAudio');
     this.muteVideoButton = document.getElementById('muteVideo');
@@ -49,7 +50,7 @@ export class TestComponent implements OnInit {
     this.stopShareScreen = document.getElementById('stopShareScreen');
     this.leaveMeeting = document.getElementById('leaveMeeting');
     this.chatBtn = document.getElementById('chat');
-
+    this.chatclose = document.getElementById('close');
     this.conference = new Owt.Conference.ConferenceClient();
     this.room = sessionStorage.getItem('joinedId');
     this.username = sessionStorage.getItem('username');
@@ -106,6 +107,13 @@ export class TestComponent implements OnInit {
           console.log(err);
         });
     });
+
+    this.chatBtn.addEventListener('click', () => {
+      $('.br-chat-wrapper').toggleClass('active');
+    });
+    this.chatclose.addEventListener('click', () => {
+      $('.br-chat-wrapper').removeClass('active');
+    });
   }
 
   join() {
@@ -119,13 +127,15 @@ export class TestComponent implements OnInit {
           this.meet.getMeetState(this.room).subscribe((data: any) => {
             this.meetState = data;
             console.log(this.meetState);
-            if (this.meetState.screenShare) {
-              $('#screen').addClass('active');
-              $('.br-confernce-user-lists').addClass('right');
-            }
-
+            
             for (let stream of resp.remoteStreams) {
               if (stream.source.audio !== 'mixed') {
+                if (stream.attributes.type == 'screen-share') {
+                  console.log("screencast sub");
+                  
+                  $('#screen').addClass('active');
+                  $('.br-confernce-user-lists').addClass('right');
+                }
                 this.subscribeStream(stream, 'forward');
                 let videoIndex = this.meetState.videoMute.findIndex(
                   (s: any) => s.id === stream.attributes.email
@@ -139,6 +149,7 @@ export class TestComponent implements OnInit {
                 if (audioIndex) {
                   stream.audioMuted = true;
                 }
+               
               }
             }
           });
@@ -174,13 +185,13 @@ export class TestComponent implements OnInit {
       this.conference.publish(localStream).then((publication: any) => {
         console.log(publication);
         this.publicationGlobal = publication;
-        $(`#loading`).remove();
+        
         this.muteAudioButton.style.display = 'inline-block';
         this.muteVideoButton.style.display = 'inline-block';
         this.shareScreenBtn.style.display = 'inline-block';
         this.leaveMeeting.style.display = 'inline-block';
         this.chatBtn.style.display = 'inline-block';
-
+        $(`#loading`).remove();
         this.mixStream(publication.id);
         publication.addEventListener('error', (err: any) => {
           console.log('Publication error: ' + err.error.message);
