@@ -1,3 +1,4 @@
+import { formatDate } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { MeetService } from '../meet.service';
@@ -41,6 +42,7 @@ export class TestComponent implements OnInit {
   now: any;
   date: any;
   chatclose: any;
+  today: any;
   ngOnInit(): void {
     this.muteAudioButton = document.getElementById('muteAudio');
     this.muteVideoButton = document.getElementById('muteVideo');
@@ -56,6 +58,19 @@ export class TestComponent implements OnInit {
     this.username = sessionStorage.getItem('username');
     this.email = sessionStorage.getItem('loginmail');
 
+    this.date = new Date();
+    this.today = this.date.toLocaleDateString();
+
+    // setInterval(() => {
+    //   this.now = new Date();
+    //   // this.now=this.date.toLocaleTimeString()
+    // }, 1);
+    this.now = formatDate(
+      this.today,
+      'dd-MM-yyyy hh:mm:ss a',
+      'en-US',
+      '+0530'
+    );
     this.join();
     this.conference.addEventListener('streamadded', (event: any) => {
       console.log('added', event);
@@ -127,12 +142,12 @@ export class TestComponent implements OnInit {
           this.meet.getMeetState(this.room).subscribe((data: any) => {
             this.meetState = data;
             console.log(this.meetState);
-            
+
             for (let stream of resp.remoteStreams) {
               if (stream.source.audio !== 'mixed') {
                 if (stream.attributes.type == 'screen-share') {
-                  console.log("screencast sub");
-                  
+                  console.log('screencast sub');
+
                   $('#screen').addClass('active');
                   $('.br-confernce-user-lists').addClass('right');
                 }
@@ -149,7 +164,6 @@ export class TestComponent implements OnInit {
                 if (audioIndex) {
                   stream.audioMuted = true;
                 }
-               
               }
             }
           });
@@ -185,7 +199,7 @@ export class TestComponent implements OnInit {
       this.conference.publish(localStream).then((publication: any) => {
         console.log(publication);
         this.publicationGlobal = publication;
-        
+
         this.muteAudioButton.style.display = 'inline-block';
         this.muteVideoButton.style.display = 'inline-block';
         this.shareScreenBtn.style.display = 'inline-block';
@@ -270,59 +284,81 @@ export class TestComponent implements OnInit {
 
   subscribeStream(stream: any, type: string) {
     console.log(stream);
-    this.conference
-      .subscribe(stream)
-      .then((subscription: any) => {
-        console.log(subscription);
-        this.streams.push(stream);
-        console.log(this.streams);
-
-        subscription.addEventListener('mute', (event: any) => {
-          console.log(event);
-          let i = this.streams.findIndex((s: any) => s.id === stream.id);
-          if (event.kind === 'video') {
-            this.streams[i].videoMuted = true;
-          }
-          if (event.kind === 'audio') {
-            this.streams[i].audioMuted = true;
-          }
+    if (stream.attributes.type == 'cam') {
+      this.conference
+        .subscribe(stream)
+        .then((subscription: any) => {
+          console.log(subscription);
+          this.streams.push(stream);
           console.log(this.streams);
-        });
 
-        subscription.addEventListener('unmute', (event: any) => {
-          console.log(event);
-          let i = this.streams.findIndex((s: any) => s.id === stream.id);
-          if (event.kind === 'video') {
-            this.streams[i].videoMuted = false;
-          }
-          if (event.kind === 'audio') {
-            this.streams[i].audioMuted = false;
-          }
+          subscription.addEventListener('mute', (event: any) => {
+            console.log(event);
+            let i = this.streams.findIndex((s: any) => s.id === stream.id);
+            if (event.kind === 'video') {
+              this.streams[i].videoMuted = true;
+            }
+            if (event.kind === 'audio') {
+              this.streams[i].audioMuted = true;
+            }
+            console.log(this.streams);
+          });
+
+          subscription.addEventListener('unmute', (event: any) => {
+            console.log(event);
+            let i = this.streams.findIndex((s: any) => s.id === stream.id);
+            if (event.kind === 'video') {
+              this.streams[i].videoMuted = false;
+            }
+            if (event.kind === 'audio') {
+              this.streams[i].audioMuted = false;
+            }
+            console.log(this.streams);
+          });
+
+          subscription.addEventListener('error', (event: any) => {
+            console.log(event);
+
+            let index = this.streams.findIndex((s: any) => s.id === stream.id);
+            console.log(this.streams[index].attributes.type);
+
+            if (this.streams[index].attributes.type == 'screen-share') {
+              $('#screen').removeClass('active');
+              $('.br-confernce-user-lists').removeClass('right');
+            }
+            this.streams.splice(index, 1);
+            console.log(this.streams);
+          });
+        })
+        .catch((e: any) => {
+          console.log(e);
+        });
+    } else {
+      this.conference
+        .subscribe(stream, { audio: false, video: true })
+        .then((subscription: any) => {
+          console.log(subscription);
+          this.streams.push(stream);
           console.log(this.streams);
+
+          subscription.addEventListener('error', (event: any) => {
+            console.log(event);
+
+            let index = this.streams.findIndex((s: any) => s.id === stream.id);
+            console.log(this.streams[index].attributes.type);
+
+            if (this.streams[index].attributes.type == 'screen-share') {
+              $('#screen').removeClass('active');
+              $('.br-confernce-user-lists').removeClass('right');
+            }
+            this.streams.splice(index, 1);
+            console.log(this.streams);
+          });
+        })
+        .catch((e: any) => {
+          console.log(e);
         });
-
-        subscription.addEventListener('error', (event: any) => {
-          console.log(event);
-
-          let index = this.streams.findIndex((s: any) => s.id === stream.id);
-          console.log(this.streams[index].attributes.type);
-
-          if (this.streams[index].attributes.type == 'screen-share') {
-            $('#screen').removeClass('active');
-            $('.br-confernce-user-lists').removeClass('right');
-          }
-          this.streams.splice(index, 1);
-          console.log(this.streams);
-        });
-        // subscription.addEventListener('ended', (event: any) => {
-        //   let index = this.streams.findIndex((s: any) => s.id === stream.id);
-        //   this.streams.splice(index, 1);
-        //   console.log(this.streams);
-        // });
-      })
-      .catch((e: any) => {
-        console.log(e);
-      });
+    }
   }
 
   mixStream(id: string) {
