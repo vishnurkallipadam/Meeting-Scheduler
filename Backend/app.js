@@ -130,6 +130,54 @@ app.post('/unmuteAudio', async function (req, res, next) {
   }
 });
 
+app.post('/present', async function (req, res, next) {
+  try {
+    let { body } = req
+    console.log("body", body)
+    let response = await redisClient.HGET('Conference', body.data.roomId);
+    response=JSON.parse(response)
+    console.log(response);
+    response.screenShare=true
+    try{
+      let data = await redisClient.HSET('Conference', body.data.roomId, JSON.stringify(response));
+      console.log(data);
+      res.json(response)
+
+    }
+    catch(e){
+      console.log(e)
+    }
+    
+  }
+  catch (e) {
+    console.log(e)
+  }
+});
+
+app.post('/stopPresent', async function (req, res, next) {
+  try {
+    let { body } = req
+    console.log("body", body)
+    let response = await redisClient.HGET('Conference', body.data.roomId);
+    response=JSON.parse(response)
+    console.log(response);
+    response.screenShare=false
+    try{
+      let data = await redisClient.HSET('Conference', body.data.roomId, JSON.stringify(response));
+      console.log(data);
+      res.json(response)
+
+    }
+    catch(e){
+      console.log(e)
+    }
+    
+  }
+  catch (e) {
+    console.log(e)
+  }
+});
+
 
 app.post('/muteVideo', async function (req, res, next) {
   try {

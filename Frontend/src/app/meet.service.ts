@@ -89,6 +89,14 @@ export class MeetService {
     return this.http.post<any>(`${environment.url}/unmuteVideo`, { data });
   }
 
+  presentScreen(data: any) {
+    return this.http.post<any>(`${environment.url}/present`, { data });
+  }
+
+  stopPresenting(data: any) {
+    return this.http.post<any>(`${environment.url}/stopPresent`, { data });
+  }
+
   getMeetState(id:any){
       return this.http.get<any>(`${environment.url}/meetStatus/` + id);    
   }
