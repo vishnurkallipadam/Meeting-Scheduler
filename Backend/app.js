@@ -1,3 +1,4 @@
+const fs = require('fs')
 require("dotenv").config();
 var express = require("express");
 const app = express();
