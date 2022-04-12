@@ -18,7 +18,6 @@ export class TestComponent implements OnInit {
   constructor(private meet: MeetService, private router: Router) {}
 
   room: any;
-
   conference: any;
   mytag: any = false;
   streams: any = [];
@@ -43,6 +42,7 @@ export class TestComponent implements OnInit {
   date: any;
   chatclose: any;
   today: any;
+  selfShare: any = false;
 
   ngOnInit(): void {
     this.muteAudioButton = document.getElementById('muteAudio');
@@ -120,7 +120,9 @@ export class TestComponent implements OnInit {
           };
           this.meet.unmuteAudio(data).subscribe((res) => {
             this.meet.unmuteVideo(data).subscribe((res) => {
-              this.meet.stopPresenting(data).subscribe(() => {});
+              if (this.selfShare) {
+                this.meet.stopPresenting(data).subscribe(() => {});
+              }
             });
           });
 
@@ -417,7 +419,9 @@ export class TestComponent implements OnInit {
             roomId: this.room,
           };
           this.meet.presentScreen(data).subscribe(
-            (data: any) => {},
+            (data: any) => {
+              this.selfShare = true;
+            },
             (err: any) => {
               console.log(err);
             }
@@ -436,7 +440,9 @@ export class TestComponent implements OnInit {
                 roomId: this.room,
               };
               this.meet.stopPresenting(data).subscribe(
-                (data: any) => {},
+                (data: any) => {
+                  this.selfShare = false;
+                },
                 (err: any) => {
                   console.log(err);
                 }
@@ -464,7 +470,9 @@ export class TestComponent implements OnInit {
         };
         this.meet.unmuteAudio(data).subscribe((res) => {
           this.meet.unmuteVideo(data).subscribe((res) => {
-            this.meet.stopPresenting(data).subscribe(() => {});
+            if (this.selfShare) {
+              this.meet.stopPresenting(data).subscribe(() => {});
+            }
           });
         });
 
