@@ -49,7 +49,9 @@ export class ChatComponent implements OnInit {
         room: room,
       });
       this.message = '';
-      $(".msger").stop().animate({ scrollTop: $(".msger")[0].scrollHeight}, 1000);
+      $('.msger')
+        .stop()
+        .animate({ scrollTop: $('.msger')[0].scrollHeight }, 1000);
     }
   }
 }

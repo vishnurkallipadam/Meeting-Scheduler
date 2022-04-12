@@ -1,39 +1,43 @@
-    <section class="msger">
-     
-    
-            <main class="msger-chat" *ngFor="let i of messageArray">
-              <div class="msg left-msg" *ngIf="i.user!==mail">
-                
-          
-                <div class="msg-bubble">
-                  <div class="msg-info">
-                    <div class="msg-info-name"><h6 style="color: rgb(184, 184, 184);">{{i.user}}</h6></div>
-                    <div class="msg-info-time"></div>
-                  </div>
-          
-                  <div class="msg-text">
-                    <h6 style="color: black;">{{i.message}}</h6>
-                  </div>
-                </div>
-              </div>
-          
-              <div class="msg right-msg" *ngIf="i.user==mail" >
-                
-                <div class="msg-bubble">
-                  <div class="msg-info">
-                    <div class="msg-info-name"><h6 style="color: rgb(184, 184, 184);">{{i.user}}</h6></div>
-                    <div class="msg-info-time"></div>
-                  </div>
-          
-                  <div class="msg-text">
-                    <h6 style="color: black;">{{i.message}}</h6>
-                  </div>
-                </div>
-              </div>
-            </main>
-          
-          </section>
-          <form (submit)="sendMessage()" class="msger-inputarea">
-            <input [(ngModel)]="message" name="mmessage" type="text" class="msger-input" placeholder="Enter your message...">
-            <button type="submit" [disabled]=""  class="msger-send-btn">Send</button>
-          </form>
+<section class="msger">
+
+
+  <main class="msger-chat" *ngFor="let i of messageArray">
+    <div class="msg left-msg" *ngIf="i.user!==mail">
+
+
+      <div class="msg-bubble">
+        <div class="msg-info">
+          <div class="msg-info-name">
+            <h6 style="color: rgb(184, 184, 184);">{{i.user}}</h6>
+          </div>
+          <div class="msg-info-time"></div>
+        </div>
+
+        <div class="msg-text">
+          <h6 style="color: black;">{{i.message}}</h6>
+        </div>
+      </div>
+    </div>
+
+    <div class="msg right-msg" *ngIf="i.user==mail">
+
+      <div class="msg-bubble">
+        <div class="msg-info">
+          <div class="msg-info-name">
+            <h6 style="color: rgb(184, 184, 184);">{{i.user}}</h6>
+          </div>
+          <div class="msg-info-time"></div>
+        </div>
+
+        <div class="msg-text">
+          <h6 style="color: black;">{{i.message}}</h6>
+        </div>
+      </div>
+    </div>
+  </main>
+
+</section>
+<form (submit)="sendMessage()" class="msger-inputarea">
+  <input [(ngModel)]="message" name="mmessage" type="text" class="msger-input" placeholder="Enter your message...">
+  <button type="submit" [disabled]="" class="msger-send-btn">Send</button>
+</form>

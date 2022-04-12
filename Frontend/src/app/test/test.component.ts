@@ -43,6 +43,7 @@ export class TestComponent implements OnInit {
   date: any;
   chatclose: any;
   today: any;
+
   ngOnInit(): void {
     this.muteAudioButton = document.getElementById('muteAudio');
     this.muteVideoButton = document.getElementById('muteVideo');
@@ -113,6 +114,15 @@ export class TestComponent implements OnInit {
               track.stop();
             });
           }
+          let data = {
+            user: this.email,
+            roomId: this.room,
+          };
+          this.meet.unmuteAudio(data).subscribe((res) => {
+            this.meet.unmuteVideo(data).subscribe((res) => {
+              this.meet.stopPresenting(data).subscribe(() => {});
+            });
+          });
 
           console.log(response);
           alert('you left the meeting');
@@ -147,7 +157,7 @@ export class TestComponent implements OnInit {
               if (stream.source.audio !== 'mixed') {
                 if (stream.attributes.type == 'screen-share') {
                   console.log('screencast sub');
-
+                  this.screenShare = true;
                   $('#screen').addClass('active');
                   $('.br-confernce-user-lists').addClass('right');
                 }
@@ -325,6 +335,7 @@ export class TestComponent implements OnInit {
             if (this.streams[index].attributes.type == 'screen-share') {
               $('#screen').removeClass('active');
               $('.br-confernce-user-lists').removeClass('right');
+              this.screenShare = false;
             }
             this.streams.splice(index, 1);
             console.log(this.streams);
@@ -350,6 +361,7 @@ export class TestComponent implements OnInit {
             if (this.streams[index].attributes.type == 'screen-share') {
               $('#screen').removeClass('active');
               $('.br-confernce-user-lists').removeClass('right');
+              this.screenShare = true;
             }
             this.streams.splice(index, 1);
             console.log(this.streams);
@@ -368,70 +380,74 @@ export class TestComponent implements OnInit {
   }
 
   shareScreen() {
-    let audioConstraints;
-    let videoConstraints;
-    audioConstraints = new Owt.Base.AudioTrackConstraints(
-      Owt.Base.AudioSourceInfo.SCREENCAST
-    );
-
-    // videoConstraintsForCamera
-    videoConstraints = new Owt.Base.VideoTrackConstraints(
-      Owt.Base.VideoSourceInfo.SCREENCAST
-    );
-    let attributes = {
-      name: this.username,
-      type: 'screen-share',
-      email: this.email,
-    };
-    Owt.Base.MediaStreamFactory.createMediaStream(
-      new Owt.Base.StreamConstraints(audioConstraints, videoConstraints)
-    ).then((stream: any) => {
-      this.screenMediaStream = stream;
-      let localStream = new Owt.Base.LocalStream(
-        stream,
-        new Owt.Base.StreamSourceInfo('screen-cast', 'screen-cast'),
-        attributes
+    if (!this.screenShare) {
+      let audioConstraints;
+      let videoConstraints;
+      audioConstraints = new Owt.Base.AudioTrackConstraints(
+        Owt.Base.AudioSourceInfo.SCREENCAST
       );
-      this.conference.publish(localStream).then((publication: any) => {
-        console.log(publication);
 
-        this.stopShareScreen.style.display = 'inline-block';
-        this.shareScreenBtn.style.display = 'none';
-
-        this.publishingScreen = publication;
-        let data = {
-          user: this.email,
-          roomId: this.room,
-        };
-        this.meet.presentScreen(data).subscribe(
-          (data: any) => {},
-          (err: any) => {
-            console.log(err);
-          }
+      // videoConstraintsForCamera
+      videoConstraints = new Owt.Base.VideoTrackConstraints(
+        Owt.Base.VideoSourceInfo.SCREENCAST
+      );
+      let attributes = {
+        name: this.username,
+        type: 'screen-share',
+        email: this.email,
+      };
+      Owt.Base.MediaStreamFactory.createMediaStream(
+        new Owt.Base.StreamConstraints(audioConstraints, videoConstraints)
+      ).then((stream: any) => {
+        this.screenMediaStream = stream;
+        let localStream = new Owt.Base.LocalStream(
+          stream,
+          new Owt.Base.StreamSourceInfo('screen-cast', 'screen-cast'),
+          attributes
         );
+        this.conference.publish(localStream).then((publication: any) => {
+          console.log(publication);
 
-        this.stopShareScreen.addEventListener('click', () => {
-          publication.stop().then((response: any) => {
-            this.stopShareScreen.style.display = 'none';
-            this.shareScreenBtn.style.display = 'inline-block';
+          this.stopShareScreen.style.display = 'inline-block';
+          this.shareScreenBtn.style.display = 'none';
 
-            this.screenMediaStream.getTracks().forEach((track: any) => {
-              track.stop();
+          this.publishingScreen = publication;
+          let data = {
+            user: this.email,
+            roomId: this.room,
+          };
+          this.meet.presentScreen(data).subscribe(
+            (data: any) => {},
+            (err: any) => {
+              console.log(err);
+            }
+          );
+
+          this.stopShareScreen.addEventListener('click', () => {
+            publication.stop().then((response: any) => {
+              this.stopShareScreen.style.display = 'none';
+              this.shareScreenBtn.style.display = 'inline-block';
+
+              this.screenMediaStream.getTracks().forEach((track: any) => {
+                track.stop();
+              });
+              let data = {
+                user: this.email,
+                roomId: this.room,
+              };
+              this.meet.stopPresenting(data).subscribe(
+                (data: any) => {},
+                (err: any) => {
+                  console.log(err);
+                }
+              );
             });
-            let data = {
-              user: this.email,
-              roomId: this.room,
-            };
-            this.meet.stopPresenting(data).subscribe(
-              (data: any) => {},
-              (err: any) => {
-                console.log(err);
-              }
-            );
           });
         });
       });
-    });
+    } else {
+      alert('another user is already presenting');
+    }
   }
 
   ngOnDestroy() {
@@ -446,8 +462,10 @@ export class TestComponent implements OnInit {
           user: this.email,
           roomId: this.room,
         };
-        this.meet.unmuteAudio(data).subscribe((data) => {
-          this.meet.unmuteVideo(data).subscribe(() => {});
+        this.meet.unmuteAudio(data).subscribe((res) => {
+          this.meet.unmuteVideo(data).subscribe((res) => {
+            this.meet.stopPresenting(data).subscribe(() => {});
+          });
         });
 
         alert('you left the meeting');
