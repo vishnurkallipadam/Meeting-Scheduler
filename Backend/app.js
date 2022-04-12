@@ -78,7 +78,7 @@ app.post("/createMeet", verifyUserToken, (req, res) => {
       };
       try {
         let response = await redisClient.HSET(
-          "Conference",
+          "VishEnfinConference",
           req.body.data.meetid,
           JSON.stringify(data)
         );
@@ -97,12 +97,12 @@ app.post('/muteAudio', async function (req, res, next) {
   try {
     let { body } = req
     console.log("body", body)
-    let response = await redisClient.HGET('Conference', body.data.roomId);
+    let response = await redisClient.HGET('VishEnfinConference', body.data.roomId);
     response=JSON.parse(response)
     console.log(response);
     response.audioMute.push(body.data.user)
     try{
-      let data = await redisClient.HSET('Conference', body.data.roomId, JSON.stringify(response));
+      let data = await redisClient.HSET('VishEnfinConference', body.data.roomId, JSON.stringify(response));
       console.log(data);
       res.json(response)
 
@@ -121,13 +121,13 @@ app.post('/unmuteAudio', async function (req, res, next) {
   try {
     let { body } = req
     console.log("body", body)
-    let response = await redisClient.HGET('Conference', body.data.roomId);
+    let response = await redisClient.HGET('VishEnfinConference', body.data.roomId);
     response=JSON.parse(response)
     console.log(response);
     let index = response.audioMute.indexOf(body.data.user);
     response.audioMute.splice(index, 1);
     try{
-      let data = await redisClient.HSET('Conference', body.data.roomId, JSON.stringify(response));
+      let data = await redisClient.HSET('VishEnfinConference', body.data.roomId, JSON.stringify(response));
       console.log(data);
       res.json(response)
 
@@ -146,12 +146,12 @@ app.post('/present', async function (req, res, next) {
   try {
     let { body } = req
     console.log("body", body)
-    let response = await redisClient.HGET('Conference', body.data.roomId);
+    let response = await redisClient.HGET('VishEnfinConference', body.data.roomId);
     response=JSON.parse(response)
     console.log(response);
     response.screenShare=true
     try{
-      let data = await redisClient.HSET('Conference', body.data.roomId, JSON.stringify(response));
+      let data = await redisClient.HSET('VishEnfinConference', body.data.roomId, JSON.stringify(response));
       console.log(data);
       res.json(response)
 
@@ -170,12 +170,12 @@ app.post('/stopPresent', async function (req, res, next) {
   try {
     let { body } = req
     console.log("body", body)
-    let response = await redisClient.HGET('Conference', body.data.roomId);
+    let response = await redisClient.HGET('VishEnfinConference', body.data.roomId);
     response=JSON.parse(response)
     console.log(response);
     response.screenShare=false
     try{
-      let data = await redisClient.HSET('Conference', body.data.roomId, JSON.stringify(response));
+      let data = await redisClient.HSET('VishEnfinConference', body.data.roomId, JSON.stringify(response));
       console.log(data);
       res.json(response)
 
@@ -195,12 +195,12 @@ app.post('/muteVideo', async function (req, res, next) {
   try {
     let { body } = req
     console.log("body", body)
-    let response = await redisClient.HGET('Conference', body.data.roomId);
+    let response = await redisClient.HGET('VishEnfinConference', body.data.roomId);
     response=JSON.parse(response)
     console.log(response);
     response.videoMute.push(body.data.user)
     try{
-      let data = await redisClient.HSET('Conference', body.data.roomId, JSON.stringify(response));
+      let data = await redisClient.HSET('VishEnfinConference', body.data.roomId, JSON.stringify(response));
       console.log(data);
       res.json(response)
 
@@ -220,13 +220,13 @@ app.post('/unmuteVideo', async function (req, res, next) {
   try {
     let { body } = req
     console.log("body", body)
-    let response = await redisClient.HGET('Conference', body.data.roomId);
+    let response = await redisClient.HGET('VishEnfinConference', body.data.roomId);
     response=JSON.parse(response)
     console.log(response);
     let index = response.videoMute.indexOf(body.data.user);
     response.videoMute.splice(index, 1);
     try{
-      let data = await redisClient.HSET('Conference', body.data.roomId, JSON.stringify(response));
+      let data = await redisClient.HSET('VishEnfinConference', body.data.roomId, JSON.stringify(response));
       console.log(data);
       res.json(response)
 
@@ -245,7 +245,7 @@ app.post('/unmuteVideo', async function (req, res, next) {
 app.get('/meetStatus/:id', async function (req, res, next) {
   try {
     let { params } = req
-    let response = await redisClient.HGET('Conference', params.id);
+    let response = await redisClient.HGET('VishEnfinConference', params.id);
     res.send(response)
 
   }
@@ -321,7 +321,7 @@ app.post("/create-meeting", async function (req, res, next) {
   };
   try {
     let response = await redisClient.HSET(
-      "Conference",
+      "VishEnfinConference",
       body.meetId,
       JSON.stringify(data)
     );
