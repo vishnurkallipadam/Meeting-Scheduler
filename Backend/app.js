@@ -16,7 +16,18 @@ var chatdata = require("./src/models/chatData");
 
 var bcrypt = require("bcrypt");
 let http = require("http");
-let server = http.Server(app);
+let https = require("https");
+let server
+if (process.env.USE_SSL === 'true') {
+    var options = {
+        pfx: fs.readFileSync('/root/certificate.pfx'),
+        passphrase: 'sample'
+    };
+    server = https.createServer(options, app)
+}
+else {
+    server = http.createServer(app);
+}
 
 let socketIO = require("socket.io");
 let io = socketIO(server);
