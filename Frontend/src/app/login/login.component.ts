@@ -5,40 +5,29 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
 })
 export class LoginComponent implements OnInit {
-  user={
-    email:'',
-    password:'',
-  }
-  constructor(private auth:AuthService, private router:Router) { }
+  user = {
+    email: '',
+    password: '',
+  };
+  constructor(private auth: AuthService, private router: Router) {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
-  login(){
-    console.log(this.user);
+  login() {
     this.auth.loginUser(this.user).subscribe(
-      data=>{
-        alert("Login Success")
-        console.log(data.mail);
-        sessionStorage.setItem("loginmail",this.user.email)
-        sessionStorage.setItem("username",data.user.name)
-
-        sessionStorage.setItem("token",data.token)
-
-        console.log(data);
-        this.router.navigate(['/'])
-        
+      (data) => {
+        alert('Login Success');
+        sessionStorage.setItem('loginmail', this.user.email);
+        sessionStorage.setItem('username', data.user.name);
+        sessionStorage.setItem('token', data.token);
+        this.router.navigate(['/']);
       },
-      err=>{
-        alert(err.error);
-        
+      (err) => {
+        alert(err.error.message);
       }
-    )
-
-    
+    );
   }
-
 }
