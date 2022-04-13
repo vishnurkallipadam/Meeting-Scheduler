@@ -15,6 +15,8 @@ var meetData = require("./src/models/meetData");
 var userdata = require("./src/models/userData");
 var chatdata = require("./src/models/chatData");
 
+const icsREST = require('./lib/rest');
+icsREST.API.init('62175508b1dd074e87423862', 'oG5RXVEO/U3m4/7QgyE2LH7Y1iq+DonljH3gCuHbDzJ18ATw2GdqhLyIGmXdi4sCQQSjSo70BaBXDER33DlqR+UccbPfqUXERTas+deN6SEaH4JCGD+caX+eTQfIW0cWNxbzQ8YApEz6aT6bcl+jWU7AiX+zzawBaN3rZwoLu8w=', 'https://mcu5.enfinlabs.com:3000/', false);
 var bcrypt = require("bcrypt");
 let http = require("http");
 let https = require("https");
@@ -56,6 +58,38 @@ function verifyUserToken(req, res, next) {
   req.userId = payload.subject;
   next();
 }
+
+app.post('/createToken/', function(req, res) {
+  var room = req.body.room,
+    username = req.body.username,
+    role = req.body.role;
+  //FIXME: The actual *ISP* and *region* info should be retrieved from the *req* object and filled in the following 'preference' data.
+  var preference = {isp: 'isp', region: 'region'};
+  icsREST.API.createToken(room, username, role, preference, function(token) {
+    res.send(token);
+  }, function(err,response) {
+    console.log("err",err);
+    console.log("response",response);
+
+    res.send(err);
+  });
+});
+
+app.patch('/rooms/:room/streams/:stream', function(req, res) {
+  'use strict';
+  var room = req.params.room,
+    stream_id = req.params.stream,
+    items = req.body;
+  icsREST.API.updateStream(room, stream_id, items, function(result) {
+    res.send(result);
+  }, function(err,res) {
+    console.log("err",err);
+    console.log("res",res);
+
+    res.send(err);
+  });
+});
+
 
 app.post("/createMeet", verifyUserToken, (req, res) => {
   console.log(req.body);
