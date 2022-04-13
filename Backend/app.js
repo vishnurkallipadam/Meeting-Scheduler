@@ -434,8 +434,8 @@ io.on("connection", (socket) => {
       date: new Date().toLocaleDateString(),
       time: formatAMPM(new Date()),
     };
-    var data = new chatdata(chatsdata);
-    data.save();
+    // var data = new chatdata(chatsdata);
+    // data.save();
     io.emit(`${data.room}`, data);
   });
 });

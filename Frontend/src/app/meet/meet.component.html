@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col">
             <div class="videoSpace" >
-                <video #video  id="videoplot" autoplay></video>
+                <video #video  id="videoplot" [muted]="'muted'" autoplay></video>
                 <div style="margin-left: 15rem;">
              
                     <button (click)="muteAudio()" *ngIf="this.a=='on'" class="btn btn-primary">Mute audio</button>

@@ -605,12 +605,12 @@ body {
   display: none;
 }
 
-.br-control-panel .br-control-list > li > a {
+/* .br-control-panel .br-control-list > li > a {
   display: block;
   vertical-align: middle;
   text-align: center;
   padding: 7px 0px;
-}
+} */
 
 .br-control-panel .br-drop-up {
   background: rgba(113, 111, 111, 0.71);
@@ -724,7 +724,6 @@ body {
 .br-chat-wrapper.active {
   z-index: 3;
   opacity: 1;
-  margin-top: 3rem;
 }
 
 .br-chat-wrapper .br-chat-inner-wrapper {

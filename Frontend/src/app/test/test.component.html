@@ -33,8 +33,12 @@ i.br-icon.fa.fa-firefox
                             <div class="br-tools"><a class="br-icon br-ctrl-icon-no-video"
                                     *ngIf="stream.videoMuted"></a><a *ngIf="stream.audioMuted"
                                     class="br-icon br-ctrl-icon-no-audio"></a></div>
-                            <video *ngIf="!stream.videoMuted" class="br-video" [srcObject]="stream.mediaStream" autoplay
-                                muted></video>
+                            <div *ngIf="!stream.videoMuted">
+                                <video *ngIf="stream.attributes.name==username"  class="br-video" [srcObject]="stream.mediaStream" autoplay
+                        [muted]="'muted'"></video>
+                        <video *ngIf="stream.attributes.name!==username"  class="br-video" [srcObject]="stream.mediaStream" autoplay
+                        ></video>
+                            </div>
                             <div class="img" *ngIf="stream.videoMuted">
 
                             </div>
@@ -96,14 +100,7 @@ i.br-icon.fa.fa-firefox
                                 d="M9.486 10.607 5 6.12V8a3 3 0 0 0 4.486 2.607zm-7.84-9.253 12 12 .708-.708-12-12-.708.708z" />
                         </svg></button>
                 </li>
-                <li class="nav-item">
-                    <button id="leaveMeeting" style="display: none;" class="button btn btn-danger"><svg
-                            xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                            class="bi bi-telephone-fill" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd"
-                                d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />
-                        </svg></button>
-                </li>
+                
 
                 <li class="nav-item">
                     <button id="muteVideo" style="display: none;" class="button btn btn-outline-light"><svg
@@ -128,6 +125,14 @@ i.br-icon.fa.fa-firefox
                                 d="M2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
                         </svg></button>
                 </li>
+                <li class="nav-item">
+                    <button id="leaveMeeting" style="display: none;" class="button btn btn-danger"><svg
+                            xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-telephone-fill" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />
+                        </svg></button>
+                </li>
 
             </ul>
         </div>
@@ -142,24 +147,18 @@ i.br-icon.fa.fa-firefox
         </div>
 
         <div class="br-chat-wrapper" id="message">
-            <div class="br-chat-inner-wrapper">
-                <h3 class="br-title">Chat</h3>
-                <div id="close" class="br-icon-close"></div>
+            <div id="close" class="br-icon-close"></div>
                 <app-chat></app-chat>
-            </div>
         </div>
     </main>
     <footer class="br-pagefooter">
         <div class="row align-items-center">
             <div class="col-sm-6">
                 <div class="br-date-time-wrapper">
-                    <!-- <div class="br-time-wrapper"><span class="br-time"> {{now}} </span></div> -->
+                    <div class="br-time-wrapper"><span class="br-time"> {{now}} </span></div>
                     <div class="br-date-wrapper">{{today}}</div>
                 </div>
             </div>
         </div>
     </footer>
-
-
-
 </body>

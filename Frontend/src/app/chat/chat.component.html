@@ -1,4 +1,4 @@
-<section class="msger">
+<!-- <section class="msger">
 
 
   <main class="msger-chat" *ngFor="let i of messageArray">
@@ -38,6 +38,27 @@
 
 </section>
 <form (submit)="sendMessage()" class="msger-inputarea">
-  <input [(ngModel)]="message" name="mmessage" type="text" class="msger-input" placeholder="Enter your message...">
+  <input [(ngModel)]="message" name="message" type="text" class="msger-input" placeholder="Enter your message...">
   <button type="submit" [disabled]="" class="msger-send-btn">Send</button>
-</form>
+</form> -->
+
+<div class="br-chat-wrapper" id="message">
+  <div class="br-chat-inner-wrapper">
+    <h3 class="br-title">Chat</h3>
+    <ul class="br-msg-list no-style">
+      <li *ngFor="let i of messageArray">
+        <figure class="br-avatar"><img
+            src="https://i0.wp.com/digital-photography-school.com/wp-content/uploads/flickr/8260117875_5ab9373bce_o.jpg?resize=600%2C401&amp;ssl=1">
+        </figure>
+        <div class="br-message-dtls">
+          <h5 class="br-name">{{i.user}}</h5>
+          <div class="br-msg">{{i.message}}</div>
+        </div>
+      </li>
+    </ul>
+    <form (submit)="sendMessage()" class="br-submit-msg">
+      <input [(ngModel)]="message" name="message" type="text" class="form-control" placeholder="Type your message here">
+      <button type="submit" class="btn br-btn">Send</button>
+    </form>
+  </div>
+</div>

@@ -55,7 +55,7 @@ export class MeetService {
         ],
       },
     };
-    return this.http.post<any>(`${environment.myHost}/createRoom`, body, {
+    return this.http.post<any>(`${environment.url}/createRoom`, body, {
       responseType: 'text' as 'json',
     });
   }
@@ -97,8 +97,8 @@ export class MeetService {
     return this.http.post<any>(`${environment.url}/stopPresent`, { data });
   }
 
-  getMeetState(id:any){
-      return this.http.get<any>(`${environment.url}/meetStatus/` + id);    
+  getMeetState(id: any) {
+    return this.http.get<any>(`${environment.url}/meetStatus/` + id);
   }
 
   createToken(room: any, user: any, role: any) {
@@ -107,7 +107,7 @@ export class MeetService {
       username: user,
       role: role,
     };
-    return this.http.post<any>(`${environment.myHost}/createToken/`, body, {
+    return this.http.post<any>(`${environment.url}/createToken/`, body, {
       responseType: 'text' as 'json',
     });
   }
@@ -122,37 +122,8 @@ export class MeetService {
       },
     ];
     return this.http.patch<any>(
-      `${environment.myHost}/rooms/${rooms}/streams/${stream}`,
+      `${environment.url}/rooms/${rooms}/streams/${stream}`,
       jsonPatch
-    );
-  }
-
-  getPaticipants(roomId: any) {
-    return this.http.get<any>(
-      ` ${environment.myHost}/rooms/${roomId}/participants`
-    );
-  }
-
-  getStreams(roomId: any) {
-    return this.http.get<any>(` ${environment.myHost}/rooms/${roomId}/streams`);
-  }
-
-  startStreamingIn(room: any, inUrl: any) {
-    let rooms = room;
-    var options = {
-      url: environment.url,
-      media: {
-        audio: 'auto',
-        video: true,
-      },
-      transport: {
-        protocol: 'udp',
-        bufferSize: 2048,
-      },
-    };
-    return this.http.post<any>(
-      `${environment.myHost}/rooms/${rooms}/streaming-ins`,
-      options
     );
   }
 }

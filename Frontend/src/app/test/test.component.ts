@@ -1,4 +1,3 @@
-import { formatDate } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { MeetService } from '../meet.service';
@@ -59,27 +58,15 @@ export class TestComponent implements OnInit {
     this.username = sessionStorage.getItem('username');
     this.email = sessionStorage.getItem('loginmail');
 
-    this.date = new Date();
-    this.today = this.date.toLocaleDateString();
+    this.today = this.formatDate(new Date());
 
-    // setInterval(() => {
-    //   this.now = new Date();
-    //   // this.now=this.date.toLocaleTimeString()
-    // }, 1);
-    this.now = formatDate(
-      this.today,
-      'dd-MM-yyyy hh:mm:ss a',
-      'en-US',
-      '+0530'
-    );
+    setInterval(() => {
+      this.now = this.formatAMPM(new Date());
+    }, 1000);
+
     this.join();
     this.conference.addEventListener('streamadded', (event: any) => {
-      console.log('added', event);
-      console.log(event.stream.attributes.type);
-
       if (event.stream.attributes.type == 'screen-share') {
-        console.log('screensh');
-
         this.screenShare = true;
         $('#screen').addClass('active');
         $('.br-confernce-user-lists').addClass('right');
@@ -126,7 +113,6 @@ export class TestComponent implements OnInit {
             });
           });
 
-          console.log(response);
           alert('you left the meeting');
           this.router.navigate(['/']);
         })
@@ -149,16 +135,13 @@ export class TestComponent implements OnInit {
       .createToken(this.room, loginmail, 'presenter')
       .subscribe((data: any) => {
         this.conference.join(data).then((resp: any) => {
-          console.log('resp', resp);
           this.publish();
           this.meet.getMeetState(this.room).subscribe((data: any) => {
             this.meetState = data;
-            console.log(this.meetState);
 
             for (let stream of resp.remoteStreams) {
               if (stream.source.audio !== 'mixed') {
                 if (stream.attributes.type == 'screen-share') {
-                  console.log('screencast sub');
                   this.screenShare = true;
                   $('#screen').addClass('active');
                   $('.br-confernce-user-lists').addClass('right');
@@ -209,7 +192,6 @@ export class TestComponent implements OnInit {
         }
       );
       this.conference.publish(localStream).then((publication: any) => {
-        console.log(publication);
         this.publicationGlobal = publication;
 
         this.muteAudioButton.style.display = 'inline-block';
@@ -295,17 +277,13 @@ export class TestComponent implements OnInit {
   }
 
   subscribeStream(stream: any, type: string) {
-    console.log(stream);
     if (stream.attributes.type == 'cam') {
       this.conference
         .subscribe(stream)
         .then((subscription: any) => {
-          console.log(subscription);
           this.streams.push(stream);
-          console.log(this.streams);
 
           subscription.addEventListener('mute', (event: any) => {
-            console.log(event);
             let i = this.streams.findIndex((s: any) => s.id === stream.id);
             if (event.kind === 'video') {
               this.streams[i].videoMuted = true;
@@ -313,11 +291,9 @@ export class TestComponent implements OnInit {
             if (event.kind === 'audio') {
               this.streams[i].audioMuted = true;
             }
-            console.log(this.streams);
           });
 
           subscription.addEventListener('unmute', (event: any) => {
-            console.log(event);
             let i = this.streams.findIndex((s: any) => s.id === stream.id);
             if (event.kind === 'video') {
               this.streams[i].videoMuted = false;
@@ -325,14 +301,10 @@ export class TestComponent implements OnInit {
             if (event.kind === 'audio') {
               this.streams[i].audioMuted = false;
             }
-            console.log(this.streams);
           });
 
           subscription.addEventListener('error', (event: any) => {
-            console.log(event);
-
             let index = this.streams.findIndex((s: any) => s.id === stream.id);
-            console.log(this.streams[index].attributes.type);
 
             if (this.streams[index].attributes.type == 'screen-share') {
               $('#screen').removeClass('active');
@@ -340,7 +312,6 @@ export class TestComponent implements OnInit {
               this.screenShare = false;
             }
             this.streams.splice(index, 1);
-            console.log(this.streams);
           });
         })
         .catch((e: any) => {
@@ -350,15 +321,10 @@ export class TestComponent implements OnInit {
       this.conference
         .subscribe(stream, { audio: false, video: true })
         .then((subscription: any) => {
-          console.log(subscription);
           this.streams.push(stream);
-          console.log(this.streams);
 
           subscription.addEventListener('error', (event: any) => {
-            console.log(event);
-
             let index = this.streams.findIndex((s: any) => s.id === stream.id);
-            console.log(this.streams[index].attributes.type);
 
             if (this.streams[index].attributes.type == 'screen-share') {
               $('#screen').removeClass('active');
@@ -366,7 +332,6 @@ export class TestComponent implements OnInit {
               this.screenShare = true;
             }
             this.streams.splice(index, 1);
-            console.log(this.streams);
           });
         })
         .catch((e: any) => {
@@ -376,9 +341,7 @@ export class TestComponent implements OnInit {
   }
 
   mixStream(id: string) {
-    this.meet.mixStream(this.room, id, 'common').subscribe((data) => {
-      console.log('mixed resp', data);
-    });
+    this.meet.mixStream(this.room, id, 'common').subscribe((data) => {});
   }
 
   shareScreen() {
@@ -408,8 +371,6 @@ export class TestComponent implements OnInit {
           attributes
         );
         this.conference.publish(localStream).then((publication: any) => {
-          console.log(publication);
-
           this.stopShareScreen.style.display = 'inline-block';
           this.shareScreenBtn.style.display = 'none';
 
@@ -460,7 +421,6 @@ export class TestComponent implements OnInit {
     this.conference
       .leave()
       .then((response: any) => {
-        console.log(response);
         this.mediaStream.getTracks().forEach((track: any) => {
           track.stop();
         });
@@ -482,5 +442,23 @@ export class TestComponent implements OnInit {
       .catch((err: any) => {
         console.log(err);
       });
+  }
+  formatAMPM(date: any) {
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    var ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+    var strTime = hours + ':' + minutes + ' ' + ampm;
+    return strTime;
+  }
+
+  formatDate(date: any) {
+    var day = date.getDate();
+    var month = date.getMonth() + 1;
+    var year = date.getFullYear();
+    var currentDate = day + ' - ' + month + ' - ' + year;
+    return currentDate;
   }
 }
