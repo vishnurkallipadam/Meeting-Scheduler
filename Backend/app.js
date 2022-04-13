@@ -365,6 +365,17 @@ app.post("/create-meeting", async function (req, res, next) {
   }
 });
 
+app.post('/createRoom/', function(req, res) {
+  'use strict';
+  var name = req.body.name;
+  var options = req.body.options;
+  icsREST.API.createRoom(name, options, function(response) {
+    res.send(response);
+  }, function(err) {
+    res.send(err);
+  });
+});
+
 app.post("/login", (req, res) => {
   console.log(req.body);
   userdata.findOne({ email: req.body.data.email }, (err, user) => {
