@@ -82,9 +82,9 @@ app.patch('/rooms/:room/streams/:stream', function(req, res) {
     items = req.body;
   icsREST.API.updateStream(room, stream_id, items, function(result) {
     res.send(result);
-  }, function(err,res) {
+  }, function(err,resp) {
     console.log("err",err);
-    console.log("res",res);
+    console.log("res",resp);
 
     res.send(err);
   });
@@ -144,7 +144,6 @@ app.post('/muteAudio', async function (req, res, next) {
     catch(e){
       console.log(e)
     }
-    
   }
   catch (e) {
     console.log(e)
@@ -427,7 +426,7 @@ io.on("connection", (socket) => {
   socket.on("message", (data) => {
     console.log(data);
     let date_ob = new Date();
-    var chatsdata = {
+    var data = {
       user: data.user,
       room: data.room,
       message: data.message,
@@ -441,6 +440,7 @@ io.on("connection", (socket) => {
 });
 
 function formatAMPM(date) {
+  
   var hours = date.getHours();
   var minutes = date.getMinutes();
   var ampm = hours >= 12 ? "pm" : "am";
